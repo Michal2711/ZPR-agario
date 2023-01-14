@@ -71,27 +71,7 @@ void Game::updatePlayer()
 
 void Game::updateView()
 {
-
-    // this->board.view.setCenter(this->board.getPlayerPosition());
     this->board.view.setCenter(this->player.getShape().getPosition());
-
-    // std::cout<<"x: "<<this->player.getShape().getPosition().x<<std::endl;
-    // std::cout<<"y: "<<this->player.getShape().getPosition().y<<std::endl;
-
-    // float size_x = this->board.getWindowSize().x;
-    // float size_y = this->board.getWindowSize().y;
-
-    // sf::Vector2f playerPosition = this->player.getShape().getPosition();
-    // sf::Vector2f viewportSize(size_x, size_y);
-    // sf::Vector2f viewportPos(playerPosition.x - viewportSize.x, playerPosition.y - viewportSize.y);
-
-    // if (viewportPos.x < 0) viewportPos.x = 0;
-    //     if (viewportPos.y < 0) viewportPos.y = 0;
-    //     if (viewportPos.x + viewportSize.x > size_x) viewportPos.x = size_x - viewportSize.x;
-    //     if (viewportPos.y + viewportSize.y > size_y) viewportPos.y = size_y - viewportSize.y;
-
-    // this->board.view.setViewport(sf::FloatRect(viewportPos.x / size_x, viewportPos.y / size_y, viewportSize.x / size_x, viewportSize.y / size_y));
-
 }
 
 void Game::updateCollision()
@@ -117,7 +97,7 @@ void Game::update()
     {
         this->spawnBalls();
 		this->updatePlayer();
-        // this->updateView();
+        this->updateView();
 		this->updateCollision();
     }
 }
@@ -126,7 +106,7 @@ void Game::render()
 {
     this->board.getWindow()->clear(sf::Color(255, 255, 255));
 
-    // this->board.getWindow()->setView(this->board.getView());
+    this->board.getWindow()->setView(this->board.getView());
 
     this->board.getWindow()->draw(this->board.getGrid());
 

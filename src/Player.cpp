@@ -67,65 +67,53 @@ void Player::updateInput(const sf::Vector2i& mousePos, float dt, const sf::Rende
 
     this->shape.move(this->velocity * dt);
 
+
     // Ograniczenie, żeby kulka nie wychodziła poza obszar mapy
-    sf::Vector2f position = this->shape.getPosition();
-    if (position.x < this->shape.getRadius())
-    {
-        position.x = this->shape.getRadius();
-    }
-    else if (position.x > window->getSize().x - this->shape.getRadius())
-    {
-        position.x = window->getSize().x - this->shape.getRadius();
-    }
-
-    if (position.y < this->shape.getRadius())
-    {
-        position.y = this->shape.getRadius();
-    }
-    else if (position.y > window->getSize().y - this->shape.getRadius())
-    {
-        position.y = window->getSize().y - this->shape.getRadius();
-    }
-
-    this->shape.setPosition(position);
-
-    // std::cout<<this->getShape().getPosition().x<<std::endl;
-    // std::cout<<this->getShape().getPosition().y<<std::endl;
-
-    // this->shape.setPosition((float)mousePos.x, (float)mousePos.y);
-
-    // if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    // sf::Vector2f position = this->shape.getPosition();
+    // if ( position.x < 0 )
+    //     position.x = 0;
+    // else if ( position.x >)
+    // if (position.x < this->shape.getRadius())
     // {
-    //     this->shape.move(-this->speed, 0.f);
+    //     position.x = this->shape.getRadius();
     // }
-    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    // else if (position.x > window->getSize().x - this->shape.getRadius())
     // {
-    //     this->shape.move(this->speed, 0.f);
+    //     position.x = window->getSize().x - this->shape.getRadius();
     // }
-    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+
+    // if (position.y < this->shape.getRadius())
     // {
-    //     this->shape.move(0.f, -this->speed);
+    //     position.y = this->shape.getRadius();
     // }
-    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    // else if (position.y > window->getSize().y - this->shape.getRadius())
     // {
-    //     this->shape.move(0.f, this->speed);
+    //     position.y = window->getSize().y - this->shape.getRadius();
     // }
+
+    // this->shape.setPosition(position);
+
 }
 
 void Player::updateCollision(const sf::RenderTarget* target)
 {
     // Left
     if(this->shape.getGlobalBounds().left <= 0.f)
-        this->shape.setPosition(0.f, this->shape.getGlobalBounds().top);
+        this->shape.setPosition(0.f, this->shape.getPosition().y);
+        // this->shape.setPosition(0.f, this->shape.getGlobalBounds().top);
     // Right
+    // if (this->shape.getGlobalBounds().left + this->shape.getGlobalBounds().width >= target->getSize().x)
     if (this->shape.getGlobalBounds().left + this->shape.getGlobalBounds().width >= target->getSize().x)
-		this->shape.setPosition(target->getSize().x - this->shape.getGlobalBounds().width, this->shape.getGlobalBounds().top);
+        this->shape.setPosition(target->getSize().x, this->shape.getPosition().y);
+		// this->shape.setPosition(target->getSize().x - this->shape.getGlobalBounds().width, this->shape.getGlobalBounds().top);
 	// Top
 	if (this->shape.getGlobalBounds().top <= 0.f)
-		this->shape.setPosition(this->shape.getGlobalBounds().left, 0.f);
+		// this->shape.setPosition(this->shape.getGlobalBounds().left, 0.f);
+		this->shape.setPosition(this->shape.getPosition().x, 0.f);
 	// Bottom
 	if (this->shape.getGlobalBounds().top + this->shape.getGlobalBounds().height >= target->getSize().y)
-		this->shape.setPosition(this->shape.getGlobalBounds().left, target->getSize().y - this->shape.getGlobalBounds().height);
+        this->shape.setPosition(this->shape.getPosition().x, target->getSize().y);
+		// this->shape.setPosition(this->shape.getGlobalBounds().left, target->getSize().y - this->shape.getGlobalBounds().height);
 }
 
 void Player::update(const sf::RenderTarget* target, const sf::RenderWindow* window)
