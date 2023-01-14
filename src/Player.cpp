@@ -21,9 +21,9 @@ void Player::setSpeed(const float& new_speed)
     this->speed = new_speed;
 }
 
-void Player::setPosition(const sf::Vector2f& new_position){
-    this->position = new_position;
-}
+// void Player::setPosition(const sf::Vector2f& new_position){
+//     this->position = new_position;
+// }
 
 // float Player::getSize() const
 // {
@@ -56,7 +56,7 @@ void Player::setDefault(sf::Vector2f position){
     this->shape.setPosition(position.x, position.y);
 }
 
-void Player::updateInput(const sf::Vector2i& mousePos, float dt)
+void Player::updateInput(const sf::Vector2i& mousePos, float dt, const sf::RenderWindow* window)
 {
     sf::Vector2f direction = sf::Vector2f(mousePos) - this->shape.getPosition();
 
@@ -66,6 +66,31 @@ void Player::updateInput(const sf::Vector2i& mousePos, float dt)
     this->velocity = direction * this->speed;
 
     this->shape.move(this->velocity * dt);
+
+    // Ograniczenie, żeby kulka nie wychodziła poza obszar mapy
+    sf::Vector2f position = this->shape.getPosition();
+    if (position.x < this->shape.getRadius())
+    {
+        position.x = this->shape.getRadius();
+    }
+    else if (position.x > window->getSize().x - this->shape.getRadius())
+    {
+        position.x = window->getSize().x - this->shape.getRadius();
+    }
+
+    if (position.y < this->shape.getRadius())
+    {
+        position.y = this->shape.getRadius();
+    }
+    else if (position.y > window->getSize().y - this->shape.getRadius())
+    {
+        position.y = window->getSize().y - this->shape.getRadius();
+    }
+
+    this->shape.setPosition(position);
+
+    // std::cout<<this->getShape().getPosition().x<<std::endl;
+    // std::cout<<this->getShape().getPosition().y<<std::endl;
 
     // this->shape.setPosition((float)mousePos.x, (float)mousePos.y);
 
@@ -107,6 +132,6 @@ void Player::update(const sf::RenderTarget* target, const sf::RenderWindow* wind
 {
     float dt = clock.restart().asSeconds();
     sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-    this->updateInput(mousePos, dt);
+    this->updateInput(mousePos, dt, window);
     this->updateCollision(target);
 }

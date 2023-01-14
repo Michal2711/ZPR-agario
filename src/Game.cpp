@@ -71,26 +71,22 @@ void Game::updatePlayer()
 
 void Game::updateView()
 {
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) && this->board.view.getCenter().x > 0){
-        this->board.setPlayerPositionX(-this->player.getSpeed());
-    }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) && this->board.view.getCenter().x < 600){
-        this->board.setPlayerPositionX(this->player.getSpeed());
-    }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && this->board.view.getCenter().y > 0){
-        this->board.setPlayerPositionY(-this->player.getSpeed());
-    }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && this->board.view.getCenter().y < 600){
-        this->board.setPlayerPositionY(this->player.getSpeed());
-    }
-    // std::cout<<"X: "<<this->board.getPlayerPosition().x<<"Y: "<<this->board.getPlayerPosition().y<<std::endl;
-
-    // this->board.getView().setCenter(this->board.getPlayerPosition());
-    this->board.view.setCenter(this->board.getPlayerPosition());
+    // if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) && this->board.view.getCenter().x > 0){
+    //     this->board.setPlayerPositionX(-this->player.getSpeed());
+    // }
+    // if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) && this->board.view.getCenter().x < 600){
+    //     this->board.setPlayerPositionX(this->player.getSpeed());
+    // }
+    // if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && this->board.view.getCenter().y > 0){
+    //     this->board.setPlayerPositionY(-this->player.getSpeed());
+    // }
+    // if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && this->board.view.getCenter().y < 600){
+    //     this->board.setPlayerPositionY(this->player.getSpeed());
     // }
 
-    // std::cout<<"View x: "<<this->board.view.getCenter().x<<"\t";
-    // std::cout<<"View y: "<<this->board.view.getCenter().y<<std::endl;
+    // this->board.view.setCenter(this->board.getPlayerPosition());
+    this->board.view.setCenter(this->player.getShape().getPosition());
+
 }
 
 void Game::updateCollision()
