@@ -8,18 +8,16 @@ void Board::createBoard(){
     this->window = new sf::RenderWindow(this->videoMode, "Agario", sf::Style::Close | sf::Style::Titlebar);
     this->window->setFramerateLimit(60);
 
-    this->board_texture.create(this->board_texture_size, this->board_texture_size);
+    // this->board_texture.create(this->board_texture_size, this->board_texture_size);
 
-    this->board_sprite.setTexture(this->board_texture);
+    // this->board_sprite.setTexture(this->board_texture);
 
-    // this->view = sf::View(sf::Vector2f(400, 300), sf::Vector2f(400, 300));
-    this->view = sf::View(sf::Vector2f(this->window_size_x/2, this->window_size_y/2), sf::Vector2f(this->window_size_x/this->zoom, this->window_size_y/this->zoom));
-    // this->view = sf::View(sf::Vector2f(400, 300), sf::Vector2f(200, 150));
+    // this->view = sf::View(sf::Vector2f(this->window_size_x/2, this->window_size_y/2), sf::Vector2f(this->window_size_x/this->zoom, this->window_size_y/this->zoom));
 
     this->player_position = sf::Vector2f(this->window_size_x/2, this->window_size_y/2);
 
     this->grid = sf::VertexArray(sf::Lines, 2*(numLines));
-    this->window->setView(this->window->getDefaultView());
+    // this->window->setView(this->window->getDefaultView());
     sf::Vector2f size = this->window->getView().getSize();
     float rowH = size.y/this->rows;
     float colW = size.x/this->columns;
@@ -43,6 +41,10 @@ sf::VideoMode Board::getVideoMode() const {
 
 sf::RenderWindow* Board::getWindow() const {
     return this->window;
+}
+
+sf::Vector2f Board::getWindowSize() const {
+    return sf::Vector2f(this->window_size_x, this->window_size_y);
 }
 
 sf::View const& Board::getView() const {
