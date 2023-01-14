@@ -41,7 +41,7 @@ add_subdirectory(tests)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Compile executable
-add_executable(Agario src/main.cpp src/Ball.cpp src/Game.cpp src/Player.cpp src/Board.cpp)
+add_executable(Agario src/main.cpp src/Ball.cpp src/Game.cpp src/Player.cpp src/Board.cpp src/Bot.cpp)
 
 # Set include directory search paths
 target_include_directories(Agario

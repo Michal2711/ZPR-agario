@@ -1,6 +1,5 @@
 #include "../include/Player.hpp"
-#include<iostream>
-
+#include <iostream>
 
 void Player::initShape()
 {
@@ -8,18 +7,19 @@ void Player::initShape()
     this->shape.setFillColor(sf::Color::Blue);
 }
 
-void Player::setSize(const float& new_size)
+void Player::setSize(const float &new_size)
 {
     this->size = new_size;
     this->shape.setRadius(this->size);
 }
 
-void Player::setSpeed(const float& new_speed)
+void Player::setSpeed(const float &new_speed)
 {
     this->speed = new_speed;
 }
 
-void Player::setPosition(const sf::Vector2f& new_position){
+void Player::setPosition(const sf::Vector2f &new_position)
+{
     this->position = new_position;
 }
 
@@ -33,8 +33,9 @@ float Player::getSpeed() const
     return this->speed;
 }
 
-sf::Vector2f Player::getPosition() const {
-    return this->position;
+sf::Vector2f Player::getPosition() const
+{
+    return this->shape.getPosition();
 }
 
 // sf::CircleShape Player::getShape() const
@@ -44,11 +45,12 @@ sf::Vector2f Player::getPosition() const {
 
 Player::Player()
 {
-    this->size = 5.f;
+    this->size = 20.f;
     this->initShape();
 }
 
-void Player::setDefault(sf::Vector2f position){
+void Player::setDefault(sf::Vector2f position)
+{
     this->position = position;
     this->speed = 3.f;
     this->shape.setPosition(position.x, position.y);
@@ -56,7 +58,7 @@ void Player::setDefault(sf::Vector2f position){
 
 void Player::updateInput()
 {
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         this->shape.move(-this->speed, 0.f);
     }
@@ -74,23 +76,23 @@ void Player::updateInput()
     }
 }
 
-void Player::updateCollision(const sf::RenderTarget* target)
+void Player::updateCollision(const sf::RenderTarget *target)
 {
     // Left
-    if(this->shape.getGlobalBounds().left <= 0.f)
+    if (this->shape.getGlobalBounds().left <= 0.f)
         this->shape.setPosition(0.f, this->shape.getGlobalBounds().top);
     // Right
     if (this->shape.getGlobalBounds().left + this->shape.getGlobalBounds().width >= target->getSize().x)
-		this->shape.setPosition(target->getSize().x - this->shape.getGlobalBounds().width, this->shape.getGlobalBounds().top);
-	// Top
-	if (this->shape.getGlobalBounds().top <= 0.f)
-		this->shape.setPosition(this->shape.getGlobalBounds().left, 0.f);
-	// Bottom
-	if (this->shape.getGlobalBounds().top + this->shape.getGlobalBounds().height >= target->getSize().y)
-		this->shape.setPosition(this->shape.getGlobalBounds().left, target->getSize().y - this->shape.getGlobalBounds().height);
+        this->shape.setPosition(target->getSize().x - this->shape.getGlobalBounds().width, this->shape.getGlobalBounds().top);
+    // Top
+    if (this->shape.getGlobalBounds().top <= 0.f)
+        this->shape.setPosition(this->shape.getGlobalBounds().left, 0.f);
+    // Bottom
+    if (this->shape.getGlobalBounds().top + this->shape.getGlobalBounds().height >= target->getSize().y)
+        this->shape.setPosition(this->shape.getGlobalBounds().left, target->getSize().y - this->shape.getGlobalBounds().height);
 }
 
-void Player::update(const sf::RenderTarget* target)
+void Player::update(const sf::RenderTarget *target)
 {
     this->updateInput();
     this->updateCollision(target);
