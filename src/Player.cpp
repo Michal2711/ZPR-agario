@@ -1,10 +1,12 @@
 #include "../include/Player.hpp"
-#include<iostream>
+#include <iostream>
+#include <cmath>
 
 
 void Player::initShape()
 {
     this->shape.setRadius(this->size);
+    this->shape.setOrigin(this->size, this->size);
     this->shape.setFillColor(sf::Color::Blue);
 }
 
@@ -33,9 +35,9 @@ float Player::getSpeed() const
     return this->speed;
 }
 
-sf::Vector2f Player::getPosition() const {
-    return this->position;
-}
+// sf::Vector2f Player::getPosition() const {
+//     return this->position;
+// }
 
 // sf::CircleShape Player::getShape() const
 // {
@@ -44,34 +46,45 @@ sf::Vector2f Player::getPosition() const {
 
 Player::Player()
 {
-    this->size = 5.f;
+    this->size = 10.f;
     this->initShape();
 }
 
 void Player::setDefault(sf::Vector2f position){
     this->position = position;
-    this->speed = 3.f;
+    this->speed = 200.f;
     this->shape.setPosition(position.x, position.y);
 }
 
-void Player::updateInput()
+void Player::updateInput(const sf::Vector2i& mousePos, float dt)
 {
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-    {
-        this->shape.move(-this->speed, 0.f);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-    {
-        this->shape.move(this->speed, 0.f);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-    {
-        this->shape.move(0.f, -this->speed);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-    {
-        this->shape.move(0.f, this->speed);
-    }
+    sf::Vector2f direction = sf::Vector2f(mousePos) - this->shape.getPosition();
+
+    float distance = sqrt(direction.x * direction.x + direction.y * direction.y);
+
+    direction = direction / distance;
+    this->velocity = direction * this->speed;
+
+    this->shape.move(this->velocity * dt);
+
+    // this->shape.setPosition((float)mousePos.x, (float)mousePos.y);
+
+    // if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    // {
+    //     this->shape.move(-this->speed, 0.f);
+    // }
+    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    // {
+    //     this->shape.move(this->speed, 0.f);
+    // }
+    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    // {
+    //     this->shape.move(0.f, -this->speed);
+    // }
+    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    // {
+    //     this->shape.move(0.f, this->speed);
+    // }
 }
 
 void Player::updateCollision(const sf::RenderTarget* target)
@@ -90,8 +103,10 @@ void Player::updateCollision(const sf::RenderTarget* target)
 		this->shape.setPosition(this->shape.getGlobalBounds().left, target->getSize().y - this->shape.getGlobalBounds().height);
 }
 
-void Player::update(const sf::RenderTarget* target)
+void Player::update(const sf::RenderTarget* target, const sf::RenderWindow* window)
 {
-    this->updateInput();
+    float dt = clock.restart().asSeconds();
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+    this->updateInput(mousePos, dt);
     this->updateCollision(target);
 }

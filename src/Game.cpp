@@ -66,7 +66,7 @@ void Game::spawnBalls()
 
 void Game::updatePlayer()
 {
-    this->player.update(this->board.getWindow());
+    this->player.update(this->board.getWindow(), this->board.getWindow());
 }
 
 void Game::updateView()
@@ -74,7 +74,7 @@ void Game::updateView()
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) && this->board.view.getCenter().x > 0){
         this->board.setPlayerPositionX(-this->player.getSpeed());
     }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) && this->board.view.getCenter().x < 800){
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) && this->board.view.getCenter().x < 600){
         this->board.setPlayerPositionX(this->player.getSpeed());
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && this->board.view.getCenter().y > 0){
