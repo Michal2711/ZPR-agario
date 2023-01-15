@@ -5,7 +5,7 @@
 #include <SFML/Window.hpp>
 #include "../include/Ball.hpp"
 
-class Player: public Ball
+class Player : public Ball
 {
     private:
         // sf::CircleShape shape;
@@ -15,11 +15,11 @@ class Player: public Ball
         float speed=200.f;
         sf::Clock clock;
 
-        void initShape();
+    void initShape();
 
-    public:
-        Player();
-        virtual ~Player() = default;
+public:
+    Player();
+    virtual ~Player() = default;
 
         // sf::CircleShape getShape() const;
         // float getSize() const;

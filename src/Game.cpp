@@ -73,6 +73,8 @@ void Game::spawnBalls()
 void Game::updatePlayer()
 {
     this->player.update(this->board.getWindow(), this->board.getWindow());
+    // left = this->board.getGrid().getBounds().left();
+    // this->player.update(this->board.getWindow(), this->board.getGrid());
     // std::cout<<"x: "<<this->player.getShape().getPosition().x<<"\t";
     // std::cout<<"y: "<<this->player.getShape().getPosition().y<<std::endl;
 }
@@ -138,7 +140,7 @@ void Game::render()
 
     this->board.getWindow()->draw(this->board.getGrid());
 
-    // this->board.getWindow()->draw(this->board.getBoardSprite());
+    this->board.getWindow()->draw(this->board.getBoardSprite());
 
     this->player.render(*this->board.getWindow());
 

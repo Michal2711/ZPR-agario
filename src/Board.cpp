@@ -4,6 +4,7 @@
 
 void Board::createBoard(){
     std::cout<<"createBoard"<<std::endl;
+    // this->videoMode = sf::VideoMode()
     this->videoMode = sf::VideoMode(this->window_size_x, this->window_size_y);
     this->window = new sf::RenderWindow(this->videoMode, "Agario", sf::Style::Close | sf::Style::Titlebar);
     this->window->setFramerateLimit(60);

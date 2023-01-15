@@ -75,11 +75,10 @@ void Player::updateInput(const sf::Vector2i& mousePos, float dt, const sf::Rende
         this->shape.move(this->velocity * dt);
     }
 
-
     // Ograniczenie, żeby kulka nie wychodziła poza obszar mapy
     sf::Vector2f position = this->shape.getPosition();
-    if ( position.x < 0 )
-        position.x = 0;
+    if ( position.x < this->shape.getRadius() )
+        position.x = this->shape.getRadius();
     else if ( position.x > window->getSize().x - shape.getRadius())
     if (position.x < this->shape.getRadius())
     {
