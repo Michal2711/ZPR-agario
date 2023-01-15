@@ -12,7 +12,8 @@ void Board::createBoard(){
 
     // this->board_sprite.setTexture(this->board_texture);
 
-    this->view = sf::View(sf::Vector2f(this->window_size_x/2, this->window_size_y/2), sf::Vector2f(this->window_size_x/this->zoom, this->window_size_y/this->zoom));
+    // this->view = sf::View(sf::Vector2f(this->window_size_x/2, this->window_size_y/2), sf::Vector2f(this->window_size_x/this->zoom, this->window_size_y/this->zoom));
+    this->view = sf::View(sf::Vector2f(this->window_size_x, this->window_size_y), sf::Vector2f(this->window_size_x/this->zoom, this->window_size_y/this->zoom));
 
     this->player_position = sf::Vector2f(this->window_size_x/2, this->window_size_y/2);
 

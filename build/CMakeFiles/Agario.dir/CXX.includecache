@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/michalkopec/SEM5/ZPR_Projekt/projekt/include/Ball.hpp
+../include/Ball.hpp
 iostream
 -
 SFML/Graphics.hpp
@@ -16,7 +16,29 @@ SFML/System.hpp
 SFML/Window.hpp
 -
 
-/home/michalkopec/SEM5/ZPR_Projekt/projekt/include/Player.hpp
+../include/Board.hpp
+SFML/Graphics.hpp
+-
+SFML/System.hpp
+-
+SFML/Window.hpp
+-
+
+../include/Game.hpp
+iostream
+-
+ctime
+-
+vector
+-
+../include/Ball.hpp
+../include/Ball.hpp
+../include/Player.hpp
+../include/Player.hpp
+../include/Board.hpp
+../include/Board.hpp
+
+../include/Player.hpp
 SFML/Graphics.hpp
 -
 SFML/System.hpp
@@ -24,13 +46,9 @@ SFML/System.hpp
 SFML/Window.hpp
 -
 ../include/Ball.hpp
-/home/michalkopec/SEM5/ZPR_Projekt/projekt/include/Ball.hpp
+../include/Ball.hpp
 
-/home/michalkopec/SEM5/ZPR_Projekt/projekt/src/Player.cpp
-../include/Player.hpp
-/home/michalkopec/SEM5/ZPR_Projekt/projekt/include/Player.hpp
-iostream
--
-cmath
--
+/home/michalkopec/SEM5/ZPR_Projekt/projekt/src/Game.cpp
+Game.hpp
+/home/michalkopec/SEM5/ZPR_Projekt/projekt/src/Game.hpp
 

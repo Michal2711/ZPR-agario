@@ -65,15 +65,15 @@ void Player::updateInput(const sf::Vector2i& mousePos, float dt, const sf::Rende
 
     dt = clock.restart().asSeconds();
 
-    // if(abs(direction.x) > 1.f && abs(direction.y) > 1.f){
+    if(abs(direction.x) > 1.f && abs(direction.y) > 1.f){
 
-    float distance = sqrt(direction.x * direction.x + direction.y * direction.y);
+        float distance = sqrt(direction.x * direction.x + direction.y * direction.y);
 
-    direction = direction / distance;
-    this->velocity = direction * this->speed;
+        direction = direction / distance;
+        this->velocity = direction * this->speed;
 
-    this->shape.move(this->velocity * dt);
-    // }
+        this->shape.move(this->velocity * dt);
+    }
 
 
     // Ograniczenie, żeby kulka nie wychodziła poza obszar mapy

@@ -9,9 +9,9 @@ class Board {
         const int rows = 50;
         const int cell_size = 7;
         const int numLines = rows + columns - 2;
-        const int window_size_x = 800;
-        const int window_size_y = 600;
-        const int zoom = 1;
+        const int window_size_x = 1400;
+        const int window_size_y = 900;
+        const int zoom = 2;
         const int board_texture_size = 2000;
 
         sf::VideoMode videoMode;
