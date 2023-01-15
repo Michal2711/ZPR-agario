@@ -8,9 +8,9 @@ void Board::createBoard(){
     this->window = new sf::RenderWindow(this->videoMode, "Agario", sf::Style::Close | sf::Style::Titlebar);
     this->window->setFramerateLimit(60);
 
-    this->board_texture.create(this->board_texture_size, this->board_texture_size);
+    // this->board_texture.create(this->board_texture_size, this->board_texture_size);
 
-    this->board_sprite.setTexture(this->board_texture);
+    // this->board_sprite.setTexture(this->board_texture);
 
     this->view = sf::View(sf::Vector2f(this->window_size_x/2, this->window_size_y/2), sf::Vector2f(this->window_size_x/this->zoom, this->window_size_y/this->zoom));
 

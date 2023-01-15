@@ -97,7 +97,7 @@ void Game::update()
     {
         this->spawnBalls();
 		this->updatePlayer();
-        this->updateView();
+        // this->updateView();
 		this->updateCollision();
     }
 }
@@ -110,7 +110,7 @@ void Game::render()
 
     this->board.getWindow()->draw(this->board.getGrid());
 
-    this->board.getWindow()->draw(this->board.getBoardSprite());
+    // this->board.getWindow()->draw(this->board.getBoardSprite());
 
     this->player.render(*this->board.getWindow());
 
