@@ -47,6 +47,10 @@ SFML/Window.hpp
 /home/michalkopec/SEM5/ZPR_test/naprawa/src/Board.cpp
 ../include/Board.h
 /home/michalkopec/SEM5/ZPR_test/naprawa/include/Board.h
+algorithm
+-
+iostream
+-
 
 /home/michalkopec/SEM5/ZPR_test/naprawa/src/Game.cpp
 ../include/Game.h

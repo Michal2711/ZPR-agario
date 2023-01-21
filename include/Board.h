@@ -9,7 +9,7 @@
 class Board
 {
 private:
-    const float bound = 200.f;
+    const float bound = 400.f;
     const int window_size_x = 800;
     const int window_size_y = 600;
 
@@ -31,7 +31,7 @@ private:
     sf::VertexArray grid_lines;
     const int cell_size = 10;
 
-    const int zoom = 2;
+    const int zoom = 1;
 
 public:
     Board() = default;
@@ -47,6 +47,7 @@ public:
     void set_player_pos(sf::Vector2f new_pos);
     sf::FloatRect get_bounds();
     sf::VertexArray getGrid() const;
+    sf::RenderWindow* getWindow() const;
     sf::Vector2i get_mouse_pos();
 
 };

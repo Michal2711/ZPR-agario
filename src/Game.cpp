@@ -32,7 +32,7 @@ void Game::run()
 void Game::move_player()
 {
     sf::Vector2f speed = this->get_player_speed();
-
+    sf::Vector2i mousePos = sf::Mouse::getPosition(this->board.getWindow());
     this->player.move(speed);
     std::cout << this->player.get_position().x << ":" << this->player.get_position().y << std::endl;
     this->board.set_player_pos(this->player.get_position());

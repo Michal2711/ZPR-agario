@@ -1,4 +1,6 @@
 #include "../include/Board.h"
+#include <algorithm>
+#include <iostream>
 
 void Board::createBoard()
 {
@@ -47,9 +49,16 @@ void Board::render(Player player)
 
     this->draw_grid();
     this->draw_grid_lines();
+
+    
     this->draw_player(player);
 
-    // this->view.setCenter(this->player_pos);
+
+    // float view_x = std::min(this->player_pos.x, 800.f);
+    // float view_y = std::min(this->player_pos.y, 600.f);
+
+
+    this->view.setCenter(this->player_pos);
     this->window->setView(this->view);
     this->window->display();
 };
@@ -90,6 +99,11 @@ sf::FloatRect Board::get_bounds()
 {
     return this->bounds;
 };
+
+sf::RenderWindow* Board::getWindow() const
+{
+    return this->window;
+}
 
 sf::Vector2i Board::get_mouse_pos()
 {
