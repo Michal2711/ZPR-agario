@@ -40,7 +40,7 @@ const bool Board::is_running() const
     return this->window->isOpen();
 };
 
-void Board::render(Player player, Player player2)
+void Board::render(Ball player, Ball player2)
 {
     this->checkClosed();
     this->window->clear(sf::Color::White);
@@ -56,7 +56,7 @@ void Board::render(Player player, Player player2)
     view_center.x /= 2;
     view_center.y /= 2;
     view_center += player.get_position();
-    std::cout << "Center:" << view_center.x << ":" << view_center.y << std::endl;
+    // std::cout << "Center:" << view_center.x << ":" << view_center.y << std::endl;
 
     this->view.setCenter(view_center);
     // this->view.setCenter(sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2));
@@ -64,7 +64,7 @@ void Board::render(Player player, Player player2)
     this->window->display();
 };
 
-void Board::draw_player(Player player)
+void Board::draw_player(Ball player)
 {
     this->window->draw(player.get_shape());
 };

@@ -4,7 +4,8 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include "Ball.h"
-#include "Player.h"
+// #include "Player.h"
+#include "Ball.h"
 
 class Board
 {
@@ -41,8 +42,8 @@ public:
     void createBoard();
     void checkClosed();
     const bool is_running() const;
-    void render(Player palyer, Player player2);
-    void draw_player(Player player);
+    void render(Ball palyer, Ball player2);
+    void draw_player(Ball player);
     void draw_grid();
     void draw_grid_lines();
     void create_grid_lines();

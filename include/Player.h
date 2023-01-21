@@ -3,17 +3,17 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
+#include <memory>
 #include "../include/Ball.h"
 
-class Player : public Ball
+class Player
 {
 protected:
-    sf::Vector2f position;
-    float speed;
-    sf::Color color;
+    std::vector<std::shared_ptr<Ball>> balls;
 
 public:
-    Player();
+    Player() = default;
+    void init_shape(sf::Vector2f position);
+    void print_balls();
     virtual ~Player() = default;
-    float get_speed();
 };

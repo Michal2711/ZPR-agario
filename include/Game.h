@@ -9,9 +9,10 @@ class Game
 private:
     Board board;
     Ball ball;
-    Player player;
+    Player player_best;
+    Ball player = Ball(sf::Vector2f(300.f, 240.f));
     // std::vector<Player> player_vec;
-    Player player2;
+    Ball player2 = Ball(sf::Vector2f(240.f, 300.f));
     sf::Vector2f get_player_speed();
     sf::Clock clock;
 

@@ -7,8 +7,8 @@
 Game::Game()
 {
     this->board.createBoard();
-    this->player.set_position(sf::Vector2f(300.f, 240.f));
-    this->player2.set_position(sf::Vector2f(240.f, 300.f));
+    this->player_best.init_shape(this->board.get_window_centre());
+    player_best.print_balls(); // this prints
 };
 
 sf::Vector2f Game::get_player_speed()
@@ -22,7 +22,7 @@ sf::Vector2f Game::get_player_speed()
     // sf::Vector2f direction = this->board.get_mouse_pos() - this->board.get_window_centre();
     // std::cout << this->board.get_mouse_pos().x << ":" << this->board.get_mouse_pos().y << std::endl;
     // std::cout << this->board.get_window_centre().x << ":" << this->board.get_window_centre().y << std::endl;
-    std::cout << this->player.get_position().x << ":" << this->player.get_position().y << std::endl;
+    // std::cout << this->player.get_position().x << ":" << this->player.get_position().y << std::endl;
 
     float distance = sqrt(direction.x * direction.x + direction.y * direction.y);
     if (distance)
