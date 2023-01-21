@@ -9,15 +9,13 @@
 class Board
 {
 private:
-    const float bound = 400.f;
-    const int window_size_x = 800;
-    const int window_size_y = 600;
+    const float bound = 500.f;
+    const int window_size_x = 500.f;
+    const int window_size_y = 500.f;
 
     sf::Vector2f bounds_pos = sf::Vector2f((window_size_x / 2) - (bound / 2), (window_size_y / 2) - (bound / 2));
     sf::Vector2f bounds_size = sf::Vector2f(bound, bound);
     sf::FloatRect bounds = sf::FloatRect(bounds_pos, bounds_size);
-
-
 
     sf::VideoMode video_mode;
     sf::RenderWindow *window;
@@ -47,7 +45,6 @@ public:
     void set_player_pos(sf::Vector2f new_pos);
     sf::FloatRect get_bounds();
     sf::VertexArray getGrid() const;
-    sf::RenderWindow* getWindow() const;
-    sf::Vector2i get_mouse_pos();
-
+    sf::Vector2f get_mouse_pos();
+    sf::Vector2f get_window_centre();
 };
