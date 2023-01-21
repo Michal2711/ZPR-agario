@@ -6,13 +6,13 @@ void Board::createBoard()
     this->window = new sf::RenderWindow(this->video_mode, "Agario", sf::Style::Close | sf::Style::Titlebar);
     this->window->setFramerateLimit(60);
 
-    this->view = sf::View(sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2), sf::Vector2f(this->window_size_x / this->zoom, this->window_size_y / this->zoom));
+    this->view = sf::View(sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2), sf::Vector2f(this->window_size_x, this->window_size_y));
     this->window->setView(this->view);
-    this->player_pos = sf::Vector2f(this->window_size_x/2, this->window_size_y/2);
+    this->player_pos = sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2);
 
     this->grid = sf::RectangleShape(sf::Vector2f(this->bounds_size.x, this->bounds_size.y));
-    grid.setPosition((this->window_size_x - grid.getSize().x) / 2, ( this->window_size_y - grid.getSize().y) / 2);
-    grid.setFillColor(sf::Color::Black);
+    grid.setPosition((this->window_size_x - grid.getSize().x) / 2, (this->window_size_y - grid.getSize().y) / 2);
+    grid.setFillColor(sf::Color::White);
     this->grid_lines = sf::VertexArray(sf::Lines);
     this->create_grid_lines();
 };
@@ -43,13 +43,11 @@ void Board::render(Player player)
     this->checkClosed();
     this->window->clear(sf::Color::White);
 
-    // TODO: this will be player
-
     this->draw_grid();
     this->draw_grid_lines();
     this->draw_player(player);
 
-    // this->view.setCenter(this->player_pos);
+    this->view.setCenter(this->player_pos);
     this->window->setView(this->view);
     this->window->display();
 };
@@ -71,13 +69,15 @@ void Board::draw_grid_lines()
 
 void Board::create_grid_lines()
 {
-    for ( int i = 0; i < this->window_size_x; i+=this->cell_size){
-        grid_lines.append(sf::Vertex(sf::Vector2f(i,0), sf::Color::White));
-        grid_lines.append(sf::Vertex(sf::Vector2f(i, this->window_size_y), sf::Color::White));
+    for (int i = this->cell_size + grid.getPosition().x; i < this->grid.getPosition().x + grid.getSize().x; i += this->cell_size)
+    {
+        grid_lines.append(sf::Vertex(sf::Vector2f(i, this->grid.getPosition().y), sf::Color::Black));
+        grid_lines.append(sf::Vertex(sf::Vector2f(i, this->grid.getPosition().y + this->grid.getSize().y), sf::Color::Black));
     }
-    for ( int i = 0; i < this->window_size_y; i+=this->cell_size){
-        grid_lines.append(sf::Vertex(sf::Vector2f(0, i), sf::Color::White));
-        grid_lines.append(sf::Vertex(sf::Vector2f(this->window_size_x, i), sf::Color::White));
+    for (int i = this->cell_size + grid.getPosition().y; i < grid.getPosition().y + this->grid.getSize().y; i += this->cell_size)
+    {
+        grid_lines.append(sf::Vertex(sf::Vector2f(this->grid.getPosition().x, i), sf::Color::Black));
+        grid_lines.append(sf::Vertex(sf::Vector2f(this->grid.getPosition().x + this->grid.getSize().x, i), sf::Color::Black));
     }
 }
 
@@ -91,8 +91,12 @@ sf::FloatRect Board::get_bounds()
     return this->bounds;
 };
 
-sf::Vector2i Board::get_mouse_pos()
+sf::Vector2f Board::get_mouse_pos()
 {
-    sf::Vector2i position = sf::Mouse::getPosition(*this->window);
+    sf::Vector2f position = sf::Vector2f(sf::Mouse::getPosition(*this->window));
     return position;
+};
+sf::Vector2f Board::get_window_centre()
+{
+    return sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2);
 };

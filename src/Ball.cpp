@@ -6,7 +6,7 @@ void Ball::init_shape(sf::Vector2f position, float size, sf::Color color)
     this->shape.setPosition(position);
     this->shape.setRadius(size);
     this->shape.setFillColor(color);
-    this->shape.setOrigin(this->size / 2.0f, this->size / 2.0f);
+    this->shape.setOrigin(this->size, this->size);
 };
 
 void Ball::set_color(sf::Color color)
