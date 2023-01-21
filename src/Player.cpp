@@ -1,15 +1,16 @@
 #include "../include/Player.h"
+#include <iostream>
 
-Player::Player()
+void Player::init_shape(sf::Vector2f position)
 {
-    this->size = 10.f;
-    this->position = sf::Vector2f(250.f, 250.f);
-    this->color = sf::Color::Blue;
-    this->speed = 50.f;
-    this->init_shape(this->position, this->size, this->color);
+    auto ball = std::make_shared<Ball>(position);
+    this->balls.push_back(ball);
 };
 
-float Player::get_speed()
+void Player::print_balls()
 {
-    return this->speed;
+    for (auto &ball : this->balls)
+    {
+        std::cout << ball->get_position().x << std::endl;
+    }
 };
