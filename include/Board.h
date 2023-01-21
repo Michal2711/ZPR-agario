@@ -29,7 +29,7 @@ private:
     sf::VertexArray grid_lines;
     const int cell_size = 10;
 
-    const int zoom = 1;
+    const int zoom = 2;
 
 public:
     Board() = default;

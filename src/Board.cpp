@@ -1,6 +1,4 @@
 #include "../include/Board.h"
-#include <algorithm>
-#include <iostream>
 
 void Board::createBoard()
 {
@@ -47,8 +45,6 @@ void Board::render(Player player)
 
     this->draw_grid();
     this->draw_grid_lines();
-
-
     this->draw_player(player);
 
     this->view.setCenter(this->player_pos);
