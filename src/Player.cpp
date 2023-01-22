@@ -14,3 +14,8 @@ void Player::print_balls()
         std::cout << ball->get_position().x << std::endl;
     }
 };
+
+std::vector<std::shared_ptr<Ball>> Player::get_balls() const
+{
+    return this->balls;
+}

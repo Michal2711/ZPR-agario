@@ -6,6 +6,7 @@
 #include "Ball.h"
 // #include "Player.h"
 #include "Ball.h"
+#include <vector>
 
 class Board
 {
@@ -37,21 +38,26 @@ private:
     const int zoom = 2;
 
 public:
-    Board() = default;
+Board() = default;
     ~Board() = default;
     void createBoard();
     void checkClosed();
     const bool is_running() const;
-    void render(Ball palyer, Ball player2);
+    void render(Ball palyer, Ball player2, std::unordered_map<int, std::unordered_map<int, std::vector<Ball>>> net);
+    void draw_static_balls();
     void draw_player(Ball player);
+    void draw_ball(Ball ball);
     void draw_grid();
     void draw_grid_lines();
     void create_grid_lines();
     void set_player_pos(sf::Vector2f new_pos);
+    // void set_count_balls(int new_count);
     sf::FloatRect get_bounds();
     sf::VertexArray getGrid() const;
     sf::Vector2f get_mouse_pos();
     sf::Vector2f get_window_centre();
     sf::Vector2f get_view_centre();
+    sf::RenderWindow* get_window() const;
+    sf::Vector2u get_bound() const;
     void update_player_origin(sf::Vector2f player_move);
 };
