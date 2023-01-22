@@ -8,7 +8,7 @@ void Board::createBoard()
 
     this->view = sf::View(sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2), sf::Vector2f(this->window_size_x, this->window_size_y));
     this->window->setView(this->view);
-    this->player_pos = sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2);
+    // this->player_pos = sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2);
 
     this->grid = sf::RectangleShape(sf::Vector2f(this->bounds_size.x, this->bounds_size.y));
     grid.setPosition((this->window_size_x - grid.getSize().x) / 2, (this->window_size_y - grid.getSize().y) / 2);

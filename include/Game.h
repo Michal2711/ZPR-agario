@@ -5,6 +5,12 @@
 #include "../include/Player.h"
 #include <unordered_map>
 
+const int NET_SIZE = 32;
+const int NET_WIDTH = 1000 / NET_SIZE;
+const int NET_HEIGHT = 1000 / NET_SIZE;
+const int MAX_BALLS = 1000;
+const float MAX_SPAWN_TIME = 10.f;
+
 class Game
 {
 private:
@@ -17,15 +23,15 @@ private:
 
     bool space_pressed = false;
 
-    const int net_size = 32;                // rozmiar komórki
-    const int net_width = 1000 / net_size;  // liczba komórek w poziomie
-    const int net_height = 1000 / net_size; // liczba komórek w pionie
+    const int net_size = NET_SIZE;                // rozmiar komórki
+    const int net_width = NET_WIDTH;  // liczba komórek w poziomie
+    const int net_height = NET_HEIGHT; // liczba komórek w pionie
     std::unordered_map<int, std::unordered_map<int, std::vector<Ball>>> net;
 
-    int max_balls = 1000;
+    int max_balls = MAX_BALLS;
     int count_balls = 0;
-    float max_spawn_time = 10.f;
-    float spawn_time = 10.f;
+    float max_spawn_time = MAX_SPAWN_TIME;
+    float spawn_time = MAX_SPAWN_TIME;
 
 public:
     Game();
