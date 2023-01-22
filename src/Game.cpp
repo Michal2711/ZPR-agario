@@ -24,10 +24,9 @@ void normalize_vector(sf::Vector2f &direction)
         direction = sf::Vector2f(0, 0);
 };
 
-sf::Vector2f Game::calculate_velocity(sf::Vector2f position, float speed)
+sf::Vector2f Game::calculate_direction(sf::Vector2f position)
 {
     // float dt = this->clock.restart().asSeconds();
-    float dt = 0.016f;
 
     sf::Vector2f window_size = this->board.get_window_size();
     window_size.x /= 2;
@@ -37,9 +36,8 @@ sf::Vector2f Game::calculate_velocity(sf::Vector2f position, float speed)
     direction += this->board.get_mouse_pos() - position;
 
     normalize_vector(direction);
-
-    return direction * speed * dt;
-};
+    return direction;
+}
 
 void Game::run()
 {
@@ -68,7 +66,8 @@ void Game::move_player()
     for (auto &ball : player_best.get_balls())
     {
         // std::cout<<ball.get_speed()<<std::endl;
-        sf::Vector2f velocity = this->calculate_velocity(ball.get_position(), ball.get_speed());
+        float dt = 0.016f;
+        sf::Vector2f velocity = dt * ball.get_speed() * this->calculate_direction(ball.get_position());
         velocity = adjust_to_bounds(velocity, ball.get_shape().getGlobalBounds());
         ball.move(velocity);
     }
@@ -213,8 +212,9 @@ void Game::splitBalls()
         player_balls[i].set_size(size);
         // std::cout << player_balls[i].get_size() << std::endl;
         // std::cout << size << std::endl;
-
-        player_best.add_ball(player_balls[i].get_position() + sf::Vector2f(2 * size, 2 * size), size);
+        sf::Vector2f velocity = this->calculate_direction(player_balls[i].get_position());
+        velocity = adjust_to_bounds(velocity, player_balls[i].get_shape().getGlobalBounds());
+        player_best.add_ball(player_balls[i].get_position() + velocity * player_best.get_shooting_range() * size, size);
         // player_best.add_ball(, size);
     }
 

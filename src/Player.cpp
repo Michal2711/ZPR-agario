@@ -20,3 +20,8 @@ std::vector<Ball> &Player::get_balls()
 {
     return this->balls;
 };
+
+float Player::get_shooting_range()
+{
+    return this->shooting_range;
+}
