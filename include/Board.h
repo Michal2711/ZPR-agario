@@ -10,10 +10,9 @@
 // #include "Ball.h"
 
 const float BOUND = 2000.f;
-const int WINDOW_X = 500;
-const int WINDOW_Y = 500;
+const int WINDOW_X = 1000;
+const int WINDOW_Y = 1000;
 const int CELL_SIZE = 10;
-
 
 class Board
 {
@@ -36,6 +35,7 @@ private:
     sf::RectangleShape grid;
     sf::VertexArray grid_lines;
     const int cell_size = CELL_SIZE;
+
 public:
     Board() = default;
     ~Board() = default;

@@ -5,7 +5,7 @@
 #include <SFML/Window.hpp>
 
 const float BASIC_SIZE = 10.f;
-const float BASIC_SPEED = 200.f;
+const float BASIC_SPEED = 100.f;
 
 class Ball
 {

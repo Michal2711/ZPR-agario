@@ -3,15 +3,18 @@
 
 #include <iostream>
 
+const float player_default_size = 10.f;
+
 Game::Game()
 {
     this->board.createBoard();
-    this->player_best.add_ball(this->board.get_window_centre(), 10.f);
-    // this->player_best.add_ball(sf::Vector2f(200.f, 200.f), 10.f);
-    // this->player_best.add_ball(sf::Vector2f(400.f, 200.f), 10.f);
-    // this->player_best.add_ball(sf::Vector2f(200.f, 400.f), 10.f);
+    this->board.get_window()->setPosition(sf::Vector2i(0, 0));
+    this->player_best.add_ball(this->board.get_window_centre(), player_default_size);
+    this->player_best.add_ball(this->board.get_window_centre() - sf::Vector2f(20.f, 20.f), player_default_size);
+    this->player_best.add_ball(this->board.get_window_centre() - sf::Vector2f(20.f, -20.f), player_default_size);
+    this->player_best.add_ball(this->board.get_window_centre() - sf::Vector2f(-20.f, 20.f), player_default_size);
     this->bots.push_back(Player());
-    bots.front().add_ball(sf::Vector2f(0.f, 0.f), 10.f);
+    bots.front().add_ball(this->board.get_window_centre() - this->board.get_window_size() / 3.f, player_default_size);
     bots.front().get_balls()[0].set_color(sf::Color::Red);
 };
 
@@ -88,7 +91,7 @@ void Game::run()
         this->checkJoin();
         this->checkCollision();
         this->checkCollision_bot();
-        // this->check_players_collision();
+        this->check_players_collision();
         this->checkBounds();
         this->board.render(this->player_best.get_balls(), this->bots, this->net);
     }
@@ -375,17 +378,19 @@ void Game::splitBalls()
 
 void Game::check_players_collision()
 {
-    if(this->bots.empty()) return;
-    if(this->player_best.get_balls().empty()) return;
+    if (this->bots.empty())
+        return;
+    if (this->player_best.get_balls().empty())
+        return;
     for (size_t i = 0; i < this->player_best.get_balls().size(); ++i)
     {
-        for(size_t j = 0; j<this->bots.size(); ++j)
+        for (size_t j = 0; j < this->bots.size(); ++j)
         {
-            for(size_t b = 0; b <= this->bots[j].get_balls().size(); ++b)
+            for (size_t b = 0; b < this->bots[j].get_balls().size(); ++b)
             {
                 if (this->player_best.get_balls()[i].get_shape().getGlobalBounds().intersects(this->bots[j].get_balls()[b].get_shape().getGlobalBounds()))
                 {
-                    if(this->player_best.get_balls()[i].get_size() > this->bots[j].get_balls()[b].get_size())
+                    if (this->player_best.get_balls()[i].get_size() > this->bots[j].get_balls()[b].get_size())
                     {
                         this->player_best.get_balls()[i].set_size(get_join_size(this->player_best.get_balls()[i].get_size(), this->bots[j].get_balls()[b].get_size()));
                         this->bots[j].get_balls().erase(this->bots[j].get_balls().begin() + b);
