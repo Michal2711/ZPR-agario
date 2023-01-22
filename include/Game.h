@@ -36,5 +36,6 @@ public:
     void move_player();
     void spawnBalls();
     void checkCollision();
-    // void removeBall(Ball ball);
+    void checkJoin();
+    void splitBalls();
 };

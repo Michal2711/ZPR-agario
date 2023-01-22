@@ -48,6 +48,7 @@ void Board::render(std::vector<Ball> balls, std::unordered_map<int, std::unorder
     this->window->clear(sf::Color::White);
     this->draw_grid();
     this->draw_grid_lines();
+    std::cout<<balls.size()<<std::endl;
     this->draw_player(balls);
     this->update_view(balls);
     for (auto &[firstKey, innerMap] : net)

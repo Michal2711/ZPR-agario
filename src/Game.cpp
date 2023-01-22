@@ -3,6 +3,7 @@
 
 // remove later
 #include <iostream>
+#include <Box2/Box2D.h>
 
 Game::Game()
 {
@@ -45,8 +46,12 @@ void Game::run()
     clock.restart();
     while (this->board.is_running())
     {
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+            this->splitBalls();
+        }
         this->move_player();
         this->spawnBalls();
+        this->checkJoin();
         this->checkCollision();
         this->board.render(this->player_best.get_balls(), this->net); // this should take vector of players
     }
@@ -126,12 +131,38 @@ void Game::checkCollision()
     }
 }
 
-// void Game::removeBall(Ball ball)
-// {
-//     int gridX = obj->x / GRID_SIZE;
-//     int gridY = obj->y / GRID_SIZE;
-//     auto& cell = grid[gridX][gridY];
-//     auto it = std::find(cell.begin(), cell.end(), obj);
-//     if (it != cell.end())
-//         cell.erase(it);
-// }
+void Game::checkJoin()
+{
+    for( size_t i = 0; i < this->player_best.get_balls().size(); ++i){
+        for( size_t j = i + 1 ; j < this->player_best.get_balls().size(); ++j){
+            if((this->player_best.get_balls()[i].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[j].get_position())) || (this->player_best.get_balls()[j].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[i].get_position())))
+            {
+            // if(sqrt(pow(this->player_best.get_balls()[i].get_position().x - this->player_best.get_balls()[j].get_position().x, 2) + pow(this->player_best.get_balls()[i].get_position().y - this->player_best.get_balls()[j].get_position().y, 2)) < 5.0f){
+                if ( this->player_best.get_balls()[i].get_size() >= this->player_best.get_balls()[j].get_size()){
+                    this->player_best.get_balls()[i].set_size(this->player_best.get_balls()[i].get_size() + this->player_best.get_balls()[j].get_size()/2);
+                    this->player_best.get_balls().erase(this->player_best.get_balls().begin() + j);
+                }
+                else {
+                    this->player_best.get_balls()[j].set_size(this->player_best.get_balls()[j].get_size() + this->player_best.get_balls()[i].get_size()/2);
+                    this->player_best.get_balls().erase(this->player_best.get_balls().begin() + i);
+                }
+            }
+        }
+    }
+}
+
+void Game::splitBalls()
+{
+    std::cout<<"BARCELONA"<<std::endl;
+    int size_before = this->player_best.get_balls().size();
+    for ( size_t i = 0; i < size_before; ++i){
+        sf::Vector2f direction = this->calculate_velocity(this->player_best.get_balls()[i].get_position(), this->player_best.get_balls()[i].get_speed());
+        sf::Vector2f newPosition = this->player_best.get_balls()[i].get_position() + direction;
+        Ball childBall(newPosition);
+        childBall.set_speed(childBall.get_size()/2);
+        b2Vec2 impuls = b2Vec(direction.x * this->player_best.get_balls()[i].get_size(), direction.y * this->player_best.get_balls()[i].get_size());
+        childBall.getBody()->ApplylinearImpulse(impulse, childeBall.getBody()->GetWorldCenter(), true);
+        this->player_best.add_ball(childBall);
+        this->player_best.get_balls()[i].set_size(this->player_best.get_balls()[i].set_size/2)
+    }
+}

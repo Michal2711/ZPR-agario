@@ -17,12 +17,28 @@ void Ball::init_shape(sf::Vector2f position, float size, sf::Color color)
 void Ball::set_color(sf::Color color)
 {
     this->shape.setFillColor(color);
-};
+}
+
+void Ball::set_speed(float new_speed)
+{
+    this->speed = new_speed;
+}
+
+void Ball::set_size(float new_size)
+{
+    this->size = new_size;
+    this->shape.setRadius(new_size);
+}
 
 sf::CircleShape Ball::get_shape() const
 {
     return this->shape;
 };
+
+float Ball::get_speed() const
+{
+    return this->speed;
+}
 
 void Ball::move(sf::Vector2f speed)
 {
@@ -38,6 +54,11 @@ float Ball::get_size()
 {
     return this->size;
 };
+
+b2Body* Ball::getBody() const
+{
+    return this->body;
+}
 
 void Ball::set_position(sf::Vector2f position)
 {
