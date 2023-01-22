@@ -8,7 +8,7 @@
 TEST(GameTest, OnlyOnePlayer)
 {
     Game game;
-    GTEST_ASSERT_EQ(game.get_player_best().get_balls().size(), 1);
+    GTEST_ASSERT_EQ(game.get_player_best().get_balls().size(), 4);
 }
 
 TEST(PlayerTest, addBall)

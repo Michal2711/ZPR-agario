@@ -1,5 +1,2 @@
 build/*
 .vscode/*
-tests/test
-tests/gtest-all.o
-tests/libtest.a
