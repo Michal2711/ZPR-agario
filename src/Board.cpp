@@ -1,5 +1,6 @@
 #include "../include/Board.h"
 #include <iostream>
+#include <vector>
 
 void Board::createBoard()
 {
