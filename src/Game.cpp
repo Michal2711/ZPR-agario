@@ -47,6 +47,7 @@ void Game::run()
     {
         this->move_player();
         this->spawnBalls();
+        this->checkCollision();
         this->board.render(this->player_best.get_balls(), this->net); // this should take vector of players
     }
 };
@@ -98,3 +99,39 @@ void Game::spawnBalls()
         }
     }
 }
+
+void Game::checkCollision()
+{
+    for( auto& ball: this->player_best.get_balls()){
+        int startX = std::max(0, (int(ball.get_position().x - ball.get_size())) / this->net_size);
+        int endX = std::min(this->net_width - 1, int(ball.get_position().x + ball.get_size()) / this->net_size);
+        int startY = std::max(0, (int(ball.get_position().y - ball.get_size())) / this->net_size);
+        int endY = std::min(this->net_height - 1, (int(ball.get_position().y + ball.get_size())) / this->net_size);
+
+        for (int x = startX; x <= endX; ++x)
+        {
+            for (int y = startY; y <= endY; ++y)
+            {
+                auto& cell = this->net[x][y];
+                for (size_t i = 0; i < cell.size(); ++i)
+                {
+                    if(ball.get_shape().getGlobalBounds().intersects(cell[i].get_shape().getGlobalBounds()))
+                    {
+                        cell.erase(cell.begin() + i);
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+// void Game::removeBall(Ball ball)
+// {
+//     int gridX = obj->x / GRID_SIZE;
+//     int gridY = obj->y / GRID_SIZE;
+//     auto& cell = grid[gridX][gridY];
+//     auto it = std::find(cell.begin(), cell.end(), obj);
+//     if (it != cell.end())
+//         cell.erase(it);
+// }
