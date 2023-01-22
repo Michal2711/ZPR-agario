@@ -10,7 +10,7 @@ class Ball
 protected:
     // zmienic by byly zmienne globalne
     float size = 10.f;
-    float speed = 50.f;
+    float speed = 200.f;
     sf::CircleShape shape;
     sf::Color color;
     b2Body* body;

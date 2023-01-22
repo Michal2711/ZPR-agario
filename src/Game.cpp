@@ -3,7 +3,7 @@
 
 // remove later
 #include <iostream>
-#include <Box2/Box2D.h>
+#include <Box2D/Box2D.h>
 
 Game::Game()
 {
@@ -61,6 +61,7 @@ void Game::move_player()
 {
     for (auto &ball : player_best.get_balls())
     {
+        // std::cout<<ball.get_speed()<<std::endl;
         sf::Vector2f velocity = this->calculate_velocity(ball.get_position(), ball.get_speed());
         velocity = adjust_to_bounds(velocity, ball.get_shape().getGlobalBounds());
         ball.move(velocity);
@@ -80,6 +81,7 @@ sf::Vector2f Game::adjust_to_bounds(sf::Vector2f velocity, sf::FloatRect ball_bo
 
 void Game::spawnBalls()
 {
+    sf::FloatRect board_bounds = this->board.get_bounds();
     if (this->spawn_time < this->max_spawn_time)
         this->spawn_time += 1.f;
     else
@@ -92,8 +94,9 @@ void Game::spawnBalls()
             {
                 color = sf::Color(rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
                 position = sf::Vector2f(
-                    static_cast<float>(rand() % this->board.get_bound().x),
-                    static_cast<float>(rand() % this->board.get_bound().y));
+                    static_cast<float>(rand() % int(board_bounds.width) + board_bounds.left),
+                    static_cast<float>(rand() % int(board_bounds.height) + board_bounds.top)
+                );
             }
             int netX = position.x / this->net_size;
             int netY = position.y / this->net_size;
@@ -108,10 +111,10 @@ void Game::spawnBalls()
 void Game::checkCollision()
 {
     for( auto& ball: this->player_best.get_balls()){
-        int startX = std::max(0, (int(ball.get_position().x - ball.get_size())) / this->net_size);
-        int endX = std::min(this->net_width - 1, int(ball.get_position().x + ball.get_size()) / this->net_size);
-        int startY = std::max(0, (int(ball.get_position().y - ball.get_size())) / this->net_size);
-        int endY = std::min(this->net_height - 1, (int(ball.get_position().y + ball.get_size())) / this->net_size);
+        int startX = std::max(0, (int(ball.get_position().x - ball.get_size())) / this->net_size - 1);
+        int endX = std::min(this->net_width - 1, int(ball.get_position().x + ball.get_size()) / this->net_size + 1);
+        int startY = std::max(0, (int(ball.get_position().y - ball.get_size())) / this->net_size - 1);
+        int endY = std::min(this->net_height - 1, (int(ball.get_position().y + ball.get_size())) / this->net_size + 1);
 
         for (int x = startX; x <= endX; ++x)
         {
@@ -133,6 +136,7 @@ void Game::checkCollision()
 
 void Game::checkJoin()
 {
+    
     for( size_t i = 0; i < this->player_best.get_balls().size(); ++i){
         for( size_t j = i + 1 ; j < this->player_best.get_balls().size(); ++j){
             if((this->player_best.get_balls()[i].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[j].get_position())) || (this->player_best.get_balls()[j].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[i].get_position())))
@@ -155,14 +159,20 @@ void Game::splitBalls()
 {
     std::cout<<"BARCELONA"<<std::endl;
     int size_before = this->player_best.get_balls().size();
+    std::vector<Ball> balls = this->player_best.get_balls();
     for ( size_t i = 0; i < size_before; ++i){
-        sf::Vector2f direction = this->calculate_velocity(this->player_best.get_balls()[i].get_position(), this->player_best.get_balls()[i].get_speed());
-        sf::Vector2f newPosition = this->player_best.get_balls()[i].get_position() + direction;
-        Ball childBall(newPosition);
-        childBall.set_speed(childBall.get_size()/2);
-        b2Vec2 impuls = b2Vec(direction.x * this->player_best.get_balls()[i].get_size(), direction.y * this->player_best.get_balls()[i].get_size());
-        childBall.getBody()->ApplylinearImpulse(impulse, childeBall.getBody()->GetWorldCenter(), true);
-        this->player_best.add_ball(childBall);
-        this->player_best.get_balls()[i].set_size(this->player_best.get_balls()[i].set_size/2)
+        if(this->player_best.get_balls()[i].get_size() > 2.f)
+        {
+            sf::Vector2f direction = this->calculate_velocity(balls[i].get_position(), balls[i].get_speed());
+            direction *= 30.f;
+            std::cout<<"direction: "<<direction.x<<" "<<direction.y<<std::endl;
+            sf::Vector2f newPosition = this->player_best.get_balls()[i].get_position() + direction;
+            // Ball childBall(newPosition);
+            this->player_best.add_ball(newPosition);
+            balls[balls.size() - 1].set_speed(balls[i].getBody()->GetMass()/2);
+            b2Vec2 impulse = b2Vec2(direction.x * balls[i].getBody()->GetMass(), direction.y * balls[i].getBody()->GetMass());
+            balls[balls.size() - 1].getBody()->ApplyLinearImpulse(impulse, balls[balls.size() - 1].getBody()->GetWorldCenter(), true);
+            balls[i].set_size(balls[i].get_size()/2);
+        }
     }
 }

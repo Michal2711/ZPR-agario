@@ -3,6 +3,7 @@
 
 void Player::add_ball(sf::Vector2f position)
 {
+    std::cout<<"TWORZENIE"<<std::endl;
     Ball ball = Ball(position);
     this->balls.push_back(ball);
 };
