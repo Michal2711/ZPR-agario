@@ -41,4 +41,5 @@ public:
     void checkJoin();
     void checkDivision();
     void splitBalls();
+    Player& get_player_best();
 };

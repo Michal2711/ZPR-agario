@@ -1,22 +1,13 @@
 #include <gtest/gtest.h>
 #include "myfunctions.h"
 #include "../include/Game.h"
+// #include "../include/Ball.h"
+// #include "../include/Board.h"
 
-TEST(myfunctions, add)
-{
-    GTEST_ASSERT_EQ(add(10, 22), 32);
-}
-
-TEST(abc, abcde)
-{
-    GTEST_ASSERT_EQ(1, 1);
-}
-
-TEST(create_game, game)
+TEST(create_game, OnlyOnePlayer)
 {
     Game game;
-    
-
+    GTEST_ASSERT_EQ(game.get_player_best().get_balls().size(), 1);
 }
 
 int main(int argc, char* argv[])

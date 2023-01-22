@@ -12,7 +12,7 @@ Game::Game()
     this->player_best.add_ball(sf::Vector2f(200.f, 200.f), 10.f);
     this->player_best.add_ball(sf::Vector2f(400.f, 200.f), 10.f);
     this->player_best.add_ball(sf::Vector2f(200.f, 400.f), 10.f);
-    // this->player_best.add_ball(sf::Vector2f(400.f, 400.f), 10.f);
+    this->player_best.add_ball(sf::Vector2f(400.f, 400.f), 10.f);
 };
 
 void normalize_vector(sf::Vector2f &direction)
@@ -23,6 +23,11 @@ void normalize_vector(sf::Vector2f &direction)
     else
         direction = sf::Vector2f(0, 0);
 };
+
+Player& Game::get_player_best()
+{
+    return this->player_best;
+}
 
 sf::Vector2f Game::calculate_velocity(sf::Vector2f position, float speed)
 {
