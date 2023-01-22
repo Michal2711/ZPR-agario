@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include "myfunctions.h"
 #include "../include/Game.h"
 // #include "../include/Ball.h"
 // #include "../include/Board.h"
