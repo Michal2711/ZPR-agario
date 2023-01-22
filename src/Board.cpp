@@ -11,6 +11,9 @@ void Board::createBoard()
     this->window->setView(this->view);
     this->player_pos = sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2);
 
+    // this->net(this->net_width, std::vector<std::vector<Ball*>>(this->net_height));
+    // std::vector<std::vector<std::vector<Ball*>>> net(net_width, std::vector<std::vector<Ball*>>(net_height));
+
     this->grid = sf::RectangleShape(sf::Vector2f(this->bounds_size.x, this->bounds_size.y));
     grid.setPosition((this->window_size_x - grid.getSize().x) / 2, (this->window_size_y - grid.getSize().y) / 2);
     grid.setFillColor(sf::Color::White);
@@ -39,7 +42,7 @@ const bool Board::is_running() const
     return this->window->isOpen();
 };
 
-void Board::render(std::vector<Ball> balls)
+void Board::render(std::vector<Ball> balls, std::unordered_map<int, std::unordered_map<int, std::vector<Ball>>> net)
 {
     this->checkClosed();
     this->window->clear(sf::Color::White);
@@ -47,6 +50,17 @@ void Board::render(std::vector<Ball> balls)
     this->draw_grid_lines();
     this->draw_player(balls);
     this->update_view(balls);
+    for (auto &[firstKey, innerMap] : net)
+    {
+        for (auto &[secondKey, balls] : innerMap)
+        {
+            for (auto ball : balls)
+            {
+                this->draw_ball(ball);
+                // std::cout<<"position: "<<"\t"<<typeid(*ball).name()<<std::endl;
+            }
+        }
+    }
     this->window->setView(this->view);
     this->window->display();
 };
@@ -69,6 +83,12 @@ void Board::draw_player(std::vector<Ball> balls)
         this->window->draw(ball.get_shape());
     }
 };
+
+void Board::draw_ball(Ball ball)
+{
+    // std::cout<<"get_shape(): "<<ball.get_shape()<<std::endl;
+    this->window->draw(ball.get_shape());
+}
 
 void Board::draw_grid()
 {
@@ -118,4 +138,14 @@ sf::Vector2f Board::get_window_centre()
 sf::Vector2f Board::get_view_centre()
 {
     return this->view.getCenter();
+}
+
+sf::RenderWindow *Board::get_window() const
+{
+    return this->window;
+}
+
+sf::Vector2u Board::get_bound() const
+{
+    return sf::Vector2u(this->bound, this->bound);
 }

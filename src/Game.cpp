@@ -46,7 +46,8 @@ void Game::run()
     while (this->board.is_running())
     {
         this->move_player();
-        this->board.render(this->player_best.get_balls()); // this should take vector of players
+        this->spawnBalls();
+        this->board.render(this->player_best.get_balls(), this->net); // this should take vector of players
     }
 };
 
@@ -70,3 +71,30 @@ sf::Vector2f Game::adjust_to_bounds(sf::Vector2f velocity, sf::FloatRect ball_bo
         velocity.x = 0.f;
     return velocity;
 };
+
+void Game::spawnBalls()
+{
+    if (this->spawn_time < this->max_spawn_time)
+        this->spawn_time += 1.f;
+    else
+    {
+        if (this->count_balls < this->max_balls)
+        {
+            sf::Color color;
+            sf::Vector2f position;
+            for (int i = 0; i < this->max_balls; ++i)
+            {
+                color = sf::Color(rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
+                position = sf::Vector2f(
+                    static_cast<float>(rand() % this->board.get_bound().x),
+                    static_cast<float>(rand() % this->board.get_bound().y));
+            }
+            int netX = position.x / this->net_size;
+            int netY = position.y / this->net_size;
+            Ball ball(position, color);
+            this->net[netX][netY].push_back(Ball(position, color));
+            this->count_balls += 1;
+            this->spawn_time = 0.f;
+        }
+    }
+}

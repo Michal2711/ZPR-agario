@@ -3,6 +3,7 @@
 #include "../include/Ball.h"
 #include "../include/Board.h"
 #include "../include/Player.h"
+#include <unordered_map>
 
 class Game
 {
@@ -18,9 +19,22 @@ private:
     sf::Vector2f adjust_to_bounds(sf::Vector2f speed, sf::FloatRect ball_bounds);
     sf::Clock clock;
 
+    const int net_size = 32;               // rozmiar komórki
+    const int net_width = 800 / net_size;  // liczba komórek w poziomie
+    const int net_height = 600 / net_size; // liczba komórek w pionie
+    std::unordered_map<int, std::unordered_map<int, std::vector<Ball>>> net;
+
+    const int max_balls = 100;
+    int count_balls = 0;
+    float max_spawn_time = 10.f;
+    float spawn_time = 10.f;
+
 public:
     Game();
     ~Game() = default;
     void run();
     void move_player();
+    void spawnBalls();
+    // void checkCollision();
+    // void removeBall(Ball* ball);
 };
