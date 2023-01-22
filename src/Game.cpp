@@ -46,9 +46,9 @@ void Game::run()
     clock.restart();
     while (this->board.is_running())
     {
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-            this->splitBalls();
-        }
+        // if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+        //     this->splitBalls();
+        // }
         this->move_player();
         this->spawnBalls();
         this->checkJoin();
@@ -110,11 +110,14 @@ void Game::spawnBalls()
 
 void Game::checkCollision()
 {
+    sf::FloatRect board_bounds = this->board.get_bounds();
+    // float top = board_bounds().top();
+
     for( auto& ball: this->player_best.get_balls()){
-        int startX = std::max(0, (int(ball.get_position().x - ball.get_size())) / this->net_size - 1);
-        int endX = std::min(this->net_width - 1, int(ball.get_position().x + ball.get_size()) / this->net_size + 1);
-        int startY = std::max(0, (int(ball.get_position().y - ball.get_size())) / this->net_size - 1);
-        int endY = std::min(this->net_height - 1, (int(ball.get_position().y + ball.get_size())) / this->net_size + 1);
+        int startX = std::max(int(board_bounds.left / this->net_size), (int(ball.get_position().x - ball.get_size())) / this->net_size);
+        int endX = std::min(this->net_width - 1, int(ball.get_position().x + ball.get_size()) / this->net_size + 5);
+        int startY = std::max(int(board_bounds.top / this->net_size), (int(ball.get_position().y - ball.get_size())) / this->net_size - 5);
+        int endY = std::min(this->net_height - 1, (int(ball.get_position().y + ball.get_size())) / this->net_size + 5);
 
         for (int x = startX; x <= endX; ++x)
         {
@@ -126,6 +129,7 @@ void Game::checkCollision()
                     if(ball.get_shape().getGlobalBounds().intersects(cell[i].get_shape().getGlobalBounds()))
                     {
                         cell.erase(cell.begin() + i);
+                        this->count_balls -= 1;
                     }
                 }
             }
@@ -136,7 +140,7 @@ void Game::checkCollision()
 
 void Game::checkJoin()
 {
-    
+
     for( size_t i = 0; i < this->player_best.get_balls().size(); ++i){
         for( size_t j = i + 1 ; j < this->player_best.get_balls().size(); ++j){
             if((this->player_best.get_balls()[i].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[j].get_position())) || (this->player_best.get_balls()[j].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[i].get_position())))
