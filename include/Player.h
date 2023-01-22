@@ -13,7 +13,7 @@ protected:
 
 public:
     Player() = default;
-    void add_ball(sf::Vector2f position);
+    void add_ball(sf::Vector2f position, float size);
     void print_balls();
     std::vector<Ball> &get_balls();
     virtual ~Player() = default;

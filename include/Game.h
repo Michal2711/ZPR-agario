@@ -11,13 +11,15 @@ private:
     Board board;
     Ball ball;
     Player player_best;
-    Ball player = Ball(sf::Vector2f(300.f, 240.f));
-    // std::vector<Player> player_vec;
-    Ball player2 = Ball(sf::Vector2f(240.f, 300.f));
+    // Ball player = Ball(sf::Vector2f(300.f, 240.f));
+    // // std::vector<Player> player_vec;
+    // Ball player2 = Ball(sf::Vector2f(240.f, 300.f));
     sf::Vector2f get_player_speed();
     sf::Vector2f calculate_velocity(sf::Vector2f position, float speed);
     sf::Vector2f adjust_to_bounds(sf::Vector2f speed, sf::FloatRect ball_bounds);
     sf::Clock clock;
+
+    bool space_pressed = false;
 
     const int net_size = 32;                // rozmiar komórki
     const int net_width = 1000 / net_size;  // liczba komórek w poziomie
@@ -37,5 +39,6 @@ public:
     void spawnBalls();
     void checkCollision();
     void checkJoin();
+    void checkDivision();
     void splitBalls();
 };

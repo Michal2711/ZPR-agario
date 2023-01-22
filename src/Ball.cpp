@@ -1,9 +1,9 @@
 #include "../include/Ball.h"
 #include <iostream>
 
-Ball::Ball(sf::Vector2f position, sf::Color color)
+Ball::Ball(sf::Vector2f position, float size, sf::Color color)
 {
-    this->init_shape(position, this->size, color);
+    this->init_shape(position, size, color);
 };
 
 void Ball::init_shape(sf::Vector2f position, float size, sf::Color color)
@@ -53,7 +53,7 @@ sf::Vector2f Ball::get_position()
 
 float Ball::get_size()
 {
-    return this->size;
+    return this->shape.getRadius();
 };
 
 // b2Body* Ball::getBody() const

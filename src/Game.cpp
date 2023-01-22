@@ -8,11 +8,11 @@
 Game::Game()
 {
     this->board.createBoard();
-    this->player_best.add_ball(this->board.get_window_centre());
-    this->player_best.add_ball(sf::Vector2f(200.f, 200.f));
-    this->player_best.add_ball(sf::Vector2f(400.f, 200.f));
-    this->player_best.add_ball(sf::Vector2f(200.f, 400.f));
-    this->player_best.add_ball(sf::Vector2f(400.f, 400.f));
+    this->player_best.add_ball(this->board.get_window_centre(), 10.f);
+    this->player_best.add_ball(sf::Vector2f(200.f, 200.f), 10.f);
+    this->player_best.add_ball(sf::Vector2f(400.f, 200.f), 10.f);
+    this->player_best.add_ball(sf::Vector2f(200.f, 400.f), 10.f);
+    // this->player_best.add_ball(sf::Vector2f(400.f, 400.f), 10.f);
 };
 
 void normalize_vector(sf::Vector2f &direction)
@@ -46,10 +46,11 @@ void Game::run()
     clock.restart();
     while (this->board.is_running())
     {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        {
-            this->splitBalls();
-        }
+        // this->keyboardkey = sf::Keyboard::isKeyPressed() if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        // {
+        //     this->splitBalls();
+        // }
+        this->checkDivision();
         this->move_player();
         this->spawnBalls();
         this->checkJoin();
@@ -57,6 +58,10 @@ void Game::run()
         this->board.render(this->player_best.get_balls(), this->net); // this should take vector of players
     }
 };
+
+void checkSpace()
+{
+}
 
 void Game::move_player()
 {
@@ -100,12 +105,28 @@ void Game::spawnBalls()
             }
             int netX = position.x / this->net_size;
             int netY = position.y / this->net_size;
-            Ball ball(position, color);
-            this->net[netX][netY].push_back(Ball(position, color));
+            Ball ball(position, 10.f, color);                             // change to have variable
+            this->net[netX][netY].push_back(Ball(position, 10.f, color)); // change to have variable
             this->count_balls += 1;
             this->spawn_time = 0.f;
         }
     }
+}
+
+float get_join_size(double size1, double size2)
+{
+
+    double area1 = size1 * size1;
+    double area2 = size2 * size2;
+    std::cout << sqrt(area1 + area2) << std::endl;
+    return float(sqrt(area1 + area2));
+};
+
+float get_division_size(double size)
+{
+    std::cout << "before:" << size << std::endl;
+    std::cout << "after:" << sqrt((size * size) / 2) << std::endl;
+    return float(sqrt((size * size) / 2.f));
 }
 
 void Game::checkCollision()
@@ -129,6 +150,7 @@ void Game::checkCollision()
                 {
                     if (ball.get_shape().getGlobalBounds().intersects(cell[i].get_shape().getGlobalBounds()))
                     {
+                        ball.set_size(get_join_size(ball.get_size(), cell[i].get_size()));
                         cell.erase(cell.begin() + i);
                         this->count_balls -= 1;
                     }
@@ -150,24 +172,57 @@ void Game::checkJoin()
                 // if(sqrt(pow(this->player_best.get_balls()[i].get_position().x - this->player_best.get_balls()[j].get_position().x, 2) + pow(this->player_best.get_balls()[i].get_position().y - this->player_best.get_balls()[j].get_position().y, 2)) < 5.0f){
                 if (this->player_best.get_balls()[i].get_size() >= this->player_best.get_balls()[j].get_size())
                 {
-                    this->player_best.get_balls()[i].set_size(this->player_best.get_balls()[i].get_size() + this->player_best.get_balls()[j].get_size() / 2);
+                    this->player_best.get_balls()[i].set_size(get_join_size(this->player_best.get_balls()[j].get_size(), this->player_best.get_balls()[i].get_size()));
                     this->player_best.get_balls().erase(this->player_best.get_balls().begin() + j);
                 }
                 else
                 {
-                    this->player_best.get_balls()[j].set_size(this->player_best.get_balls()[j].get_size() + this->player_best.get_balls()[i].get_size() / 2);
+                    this->player_best.get_balls()[j].set_size(get_join_size(this->player_best.get_balls()[j].get_size(), this->player_best.get_balls()[i].get_size()));
                     this->player_best.get_balls().erase(this->player_best.get_balls().begin() + i);
                 }
             }
         }
     }
+
+    // std::cout << player_best.get_balls()[0].get_size() << std::endl;
 }
+
+void Game::checkDivision()
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !this->space_pressed)
+    {
+        this->space_pressed = true;
+        this->splitBalls();
+    }
+    else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+    {
+        this->space_pressed = false;
+    }
+};
 
 void Game::splitBalls()
 {
     std::cout << "BARCELONA" << std::endl;
-    int size_before = this->player_best.get_balls().size();
-    std::vector<Ball> balls = this->player_best.get_balls();
+    std::vector<Ball> &player_balls = this->player_best.get_balls();
+    int size_before = player_balls.size();
+
+    std::cout << size_before << std::endl;
+    for (int i = 0; i < size_before; i++)
+    {
+        float size = get_division_size(double(player_balls[i].get_size()));
+        player_balls[i].set_size(size);
+        // std::cout << player_balls[i].get_size() << std::endl;
+        // std::cout << size << std::endl;
+
+        player_best.add_ball(player_balls[i].get_position() + sf::Vector2f(2 * size, 2 * size), size);
+        // player_best.add_ball(, size);
+    }
+
+    // for (size_t i = 0; i < size_before; ++i)
+    // {
+    //     this->player_best.add_ball(balls[i].get_position() + sf::Vector2f(2 * balls[i].get_size(), 2 * balls[i].get_size()));
+    // }
+
     // for (size_t i = 0; i < size_before; ++i)
     // {
     //     if (this->player_best.get_balls()[i].get_size() > 2.f)
