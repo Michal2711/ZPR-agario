@@ -38,13 +38,15 @@ const bool Board::is_running() const
     return this->window->isOpen();
 };
 
-void Board::render(std::vector<Ball> balls, std::unordered_map<int, std::unordered_map<int, std::vector<Ball>>> net)
+void Board::render(std::vector<Ball> balls, std::vector<Player> bots, std::unordered_map<int, std::unordered_map<int, std::vector<Ball>>> net)
 {
     this->checkClosed();
     this->window->clear(sf::Color::White);
     this->draw_grid();
     this->draw_grid_lines();
     this->draw_player(balls);
+    for (auto bot : bots)
+        draw_player(bot.get_balls());
     this->update_view(balls);
     for (auto &[firstKey, innerMap] : net)
     {

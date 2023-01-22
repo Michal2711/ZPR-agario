@@ -11,7 +11,27 @@ Game::Game()
     this->player_best.add_ball(sf::Vector2f(400.f, 200.f), 10.f);
     this->player_best.add_ball(sf::Vector2f(200.f, 400.f), 10.f);
     this->bots.push_back(Player());
-    bots.front().add_ball(sf::Vector2f(600.f, 600.f), 10.f);
+    bots.front().add_ball(sf::Vector2f(200.f, 200.f), 10.f);
+    bots.front().get_balls()[0].set_color(sf::Color::Red);
+    // sf::FloatRect board_bounds = this->board.get_bounds();
+    // while (this->count_balls < this->max_balls)
+    // {
+    //     sf::Color color;
+    //     sf::Vector2f position;
+    //     for (int i = 0; i < this->max_balls; ++i)
+    //     {
+    //         color = sf::Color(rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
+    //         position = sf::Vector2f(
+    //             static_cast<float>(rand() % int(board_bounds.width) + board_bounds.left),
+    //             static_cast<float>(rand() % int(board_bounds.height) + board_bounds.top));
+    //     }
+    //     int netX = position.x / this->net_size;
+    //     int netY = position.y / this->net_size;
+    //     Ball ball(position, 10.f, color);                             // change to have variable
+    //     this->net[netX][netY].push_back(Ball(position, 10.f, color)); // change to have variable
+    //     this->count_balls += 1;
+    //     this->spawn_time = 0.f;
+    // }
 };
 
 void normalize_vector(sf::Vector2f &direction)
@@ -80,14 +100,15 @@ void Game::run()
     while (this->board.is_running())
     {
         this->checkDivision();
+        this->waitForSpawn();
         this->move_player();
         this->move_bots();
-        // this->spawnBalls();
-        this->waitForSpawn();
+        this->spawnBalls();
         this->checkJoin();
         this->checkCollision();
+        this->checkCollision_bot();
         this->checkBounds();
-        this->board.render(this->player_best.get_balls(), this->net);
+        this->board.render(this->player_best.get_balls(), this->bots, this->net);
     }
 };
 
@@ -125,22 +146,76 @@ sf::Vector2f Game::calculate_direction_bot(sf::Vector2f position, sf::Vector2f d
 {
     sf::Vector2f window_center = this->board.get_window_size() / 2.f;
 
-    sf::Vector2f direction = this->board.get_view_centre() - window_center;
+    // sf::Vector2f direction = this->board.get_view_centre() - window_center;
+    sf::Vector2f direction = sf::Vector2f(0.f, 0.f);
     direction += destination - position;
 
     normalize_vector(direction);
     return direction;
-}
+};
+
+std::vector<Ball> Game::find_small_ball(int range, Ball &ball)
+{
+    sf::FloatRect board_bounds = this->board.get_bounds();
+
+    std::vector<Ball> nearest_balls;
+
+    float distance;
+    float min_distance = 100000.f;
+    int min_ball = 0;
+    int min_x = 0;
+    int min_y = 0;
+    int startX = std::max(int(board_bounds.left / this->net_size), (int(ball.get_position().x - ball.get_size())) / this->net_size - range);
+    int endX = std::min(int(board_bounds.left + board_bounds.width) / this->net_size, int(ball.get_position().x + ball.get_size()) / this->net_size + range);
+    int startY = std::max(int(board_bounds.top / this->net_size), (int(ball.get_position().y - ball.get_size())) / this->net_size - range);
+    int endY = std::min(int(board_bounds.top + board_bounds.height) / this->net_size, (int(ball.get_position().y + ball.get_size())) / this->net_size + range);
+
+    for (int x = startX; x <= endX; ++x)
+    {
+        for (int y = startY; y <= endY; ++y)
+        {
+            auto &cell = this->net[x][y];
+            if (cell.empty() && range < 30)
+            {
+                return find_small_ball(range + 1, ball);
+            }
+            else
+            {
+                for (size_t i = 0; i < cell.size(); ++i)
+                {
+                    nearest_balls.push_back(cell[i]);
+                }
+            }
+        }
+    }
+    return nearest_balls;
+};
 
 void Game::move_bots()
 {
-    for (auto bot : this->bots)
+    float dt = 0.016f;
+    for (auto &bot : this->bots)
     {
-        for (auto ball : bot.get_balls())
+        Ball min_ball = Ball(sf::Vector2f(0.f, 0.f));
+        float min_distance = 1000000.f;
+        for (auto &ball : bot.get_balls())
         {
+            float dt = 0.016f;
             sf::Vector2f position = ball.get_position();
 
-            sf::Vector2f direction = this->calculate_direction_bot(position, sf::Vector2f(0.f, 0.f));
+            std::vector<Ball> nearest_balls = find_small_ball(0, ball);
+            for (size_t i = 0; i < nearest_balls.size(); ++i)
+            {
+                float distance = sqrt(pow(nearest_balls[i].get_position().x - ball.get_position().x, 2) + pow(nearest_balls[i].get_position().y - ball.get_position().y, 2));
+                if (distance < min_distance)
+                {
+                    min_ball.set_position(nearest_balls[i].get_position());
+                    min_distance = distance;
+                }
+            }
+            sf::Vector2f velocity = dt * ball.get_speed() * this->calculate_direction_bot(position, min_ball.get_position());
+            velocity = adjust_to_bounds(velocity, ball.get_shape().getGlobalBounds());
+            ball.move(velocity);
         }
     }
 };
@@ -154,7 +229,7 @@ sf::Vector2f Game::adjust_to_bounds(sf::Vector2f velocity, sf::FloatRect ball_bo
     if ((ball_bounds.left + velocity.x < board_bounds.left) || ((ball_bounds.left + ball_bounds.width) + velocity.x > (board_bounds.left + board_bounds.width)))
         velocity.x = 0.f;
     return velocity;
-};
+}
 
 void Game::waitForSpawn()
 {
@@ -195,7 +270,7 @@ float get_join_size(double size1, double size2)
     double area1 = size1 * size1;
     double area2 = size2 * size2;
     return float(sqrt(area1 + area2));
-};
+}
 
 float get_division_size(double size)
 {
@@ -266,7 +341,39 @@ void Game::checkDivision()
     {
         this->space_pressed = false;
     }
-};
+}
+
+void Game::checkCollision_bot()
+{
+    sf::FloatRect board_bounds = this->board.get_bounds();
+    for (auto &bot : this->bots)
+    {
+        for (auto &ball : bot.get_balls())
+        {
+            int startX = std::max(int(board_bounds.left / this->net_size), (int(ball.get_position().x - ball.get_size())) / this->net_size);
+            int endX = std::min(int(board_bounds.left + board_bounds.width) / this->net_size - 1, int(ball.get_position().x + ball.get_size()) / this->net_size);
+            int startY = std::max(int(board_bounds.top / this->net_size), (int(ball.get_position().y - ball.get_size())) / this->net_size);
+            int endY = std::min(int(board_bounds.top + board_bounds.height) / this->net_size - 1, (int(ball.get_position().y + ball.get_size())) / this->net_size);
+
+            for (int x = startX; x <= endX; ++x)
+            {
+                for (int y = startY; y <= endY; ++y)
+                {
+                    auto &cell = this->net[x][y];
+                    for (size_t i = 0; i < cell.size(); ++i)
+                    {
+                        if (ball.get_shape().getGlobalBounds().intersects(cell[i].get_shape().getGlobalBounds()))
+                        {
+                            ball.set_size(get_join_size(ball.get_size(), cell[i].get_size()));
+                            cell.erase(cell.begin() + i);
+                            this->count_balls -= 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 void Game::splitBalls()
 {
@@ -281,5 +388,28 @@ void Game::splitBalls()
         sf::Vector2f velocity = this->calculate_direction(player_balls[i].get_position());
         velocity = adjust_to_bounds(velocity, player_balls[i].get_shape().getGlobalBounds());
         player_best.add_ball(player_balls[i].get_position() + velocity * player_best.get_shooting_range() * size, size);
+    }
+}
+
+void Game::checkJoin_bot()
+{
+    for (size_t i = 0; i < this->player_best.get_balls().size(); ++i)
+    {
+        for (size_t j = i + 1; j < this->player_best.get_balls().size(); ++j)
+        {
+            if ((this->player_best.get_balls()[i].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[j].get_position())) || (this->player_best.get_balls()[j].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[i].get_position())))
+            {
+                if (this->player_best.get_balls()[i].get_size() >= this->player_best.get_balls()[j].get_size())
+                {
+                    this->player_best.get_balls()[i].set_size(get_join_size(this->player_best.get_balls()[j].get_size(), this->player_best.get_balls()[i].get_size()));
+                    this->player_best.get_balls().erase(this->player_best.get_balls().begin() + j);
+                }
+                else
+                {
+                    this->player_best.get_balls()[j].set_size(get_join_size(this->player_best.get_balls()[j].get_size(), this->player_best.get_balls()[i].get_size()));
+                    this->player_best.get_balls().erase(this->player_best.get_balls().begin() + i);
+                }
+            }
+        }
     }
 }

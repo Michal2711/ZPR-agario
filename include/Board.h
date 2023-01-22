@@ -43,7 +43,7 @@ public:
     void createBoard();
     void checkClosed();
     const bool is_running() const;
-    void render(std::vector<Ball> balls, std::unordered_map<int, std::unordered_map<int, std::vector<Ball>>> net);
+    void render(std::vector<Ball> balls, std::vector<Player> bots, std::unordered_map<int, std::unordered_map<int, std::vector<Ball>>> net);
     void draw_player(std::vector<Ball> balls);
     void draw_static_balls();
     void draw_ball(Ball ball);

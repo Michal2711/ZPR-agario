@@ -32,12 +32,14 @@ public:
     ~Game() = default;
     sf::Vector2f calculate_direction(sf::Vector2f position);
     sf::Vector2f calculate_direction_bot(sf::Vector2f position, sf::Vector2f destination);
+    std::vector<Ball> find_small_ball(int range, Ball &ball);
     void run();
     void move_player();
     void move_bots();
     void waitForSpawn();
     void spawnBalls();
     void checkCollision();
+    void checkCollision_bot();
     void checkJoin();
     void checkDivision();
     void splitBalls();
