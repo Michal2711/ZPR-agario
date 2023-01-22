@@ -12,7 +12,7 @@
 class Board
 {
 private:
-    const float bound = 1000.f;
+    const float bound = 2000.f;
     const int window_size_x = 500;
     const int window_size_y = 500;
 

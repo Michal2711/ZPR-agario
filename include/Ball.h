@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
-#include <Box2D/Box2D.h>
+// #include <Box2D/Box2D.h>
 
 class Ball
 {
@@ -13,7 +13,7 @@ protected:
     float speed = 200.f;
     sf::CircleShape shape;
     sf::Color color;
-    b2Body* body;
+    // b2Body *body;
 
 public:
     Ball() = default;
@@ -26,7 +26,7 @@ public:
     void set_speed(float new_speed);
 
     sf::CircleShape get_shape() const;
-    b2Body* getBody() const;
+    // b2Body *getBody() const;
     float get_speed() const;
     void move(sf::Vector2f speed);
     sf::Vector2f get_position();
