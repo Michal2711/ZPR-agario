@@ -56,5 +56,6 @@ public:
     void set_max_balls(int new_max);
     void set_count_balls(int new_count);
     void push_to_net(Ball ball, int netX, int netY);
+    void check_players_collision();
     Player &get_player_best();
 };

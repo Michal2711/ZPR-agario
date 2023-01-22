@@ -7,31 +7,12 @@ Game::Game()
 {
     this->board.createBoard();
     this->player_best.add_ball(this->board.get_window_centre(), 10.f);
-    this->player_best.add_ball(sf::Vector2f(200.f, 200.f), 10.f);
-    this->player_best.add_ball(sf::Vector2f(400.f, 200.f), 10.f);
-    this->player_best.add_ball(sf::Vector2f(200.f, 400.f), 10.f);
+    // this->player_best.add_ball(sf::Vector2f(200.f, 200.f), 10.f);
+    // this->player_best.add_ball(sf::Vector2f(400.f, 200.f), 10.f);
+    // this->player_best.add_ball(sf::Vector2f(200.f, 400.f), 10.f);
     this->bots.push_back(Player());
-    bots.front().add_ball(sf::Vector2f(200.f, 200.f), 10.f);
+    bots.front().add_ball(sf::Vector2f(0.f, 0.f), 10.f);
     bots.front().get_balls()[0].set_color(sf::Color::Red);
-    // sf::FloatRect board_bounds = this->board.get_bounds();
-    // while (this->count_balls < this->max_balls)
-    // {
-    //     sf::Color color;
-    //     sf::Vector2f position;
-    //     for (int i = 0; i < this->max_balls; ++i)
-    //     {
-    //         color = sf::Color(rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
-    //         position = sf::Vector2f(
-    //             static_cast<float>(rand() % int(board_bounds.width) + board_bounds.left),
-    //             static_cast<float>(rand() % int(board_bounds.height) + board_bounds.top));
-    //     }
-    //     int netX = position.x / this->net_size;
-    //     int netY = position.y / this->net_size;
-    //     Ball ball(position, 10.f, color);                             // change to have variable
-    //     this->net[netX][netY].push_back(Ball(position, 10.f, color)); // change to have variable
-    //     this->count_balls += 1;
-    //     this->spawn_time = 0.f;
-    // }
 };
 
 void normalize_vector(sf::Vector2f &direction)
@@ -107,6 +88,7 @@ void Game::run()
         this->checkJoin();
         this->checkCollision();
         this->checkCollision_bot();
+        // this->check_players_collision();
         this->checkBounds();
         this->board.render(this->player_best.get_balls(), this->bots, this->net);
     }
@@ -391,23 +373,28 @@ void Game::splitBalls()
     }
 }
 
-void Game::checkJoin_bot()
+void Game::check_players_collision()
 {
+    if(this->bots.empty()) return;
+    if(this->player_best.get_balls().empty()) return;
     for (size_t i = 0; i < this->player_best.get_balls().size(); ++i)
     {
-        for (size_t j = i + 1; j < this->player_best.get_balls().size(); ++j)
+        for(size_t j = 0; j<this->bots.size(); ++j)
         {
-            if ((this->player_best.get_balls()[i].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[j].get_position())) || (this->player_best.get_balls()[j].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[i].get_position())))
+            for(size_t b = 0; b <= this->bots[j].get_balls().size(); ++b)
             {
-                if (this->player_best.get_balls()[i].get_size() >= this->player_best.get_balls()[j].get_size())
+                if (this->player_best.get_balls()[i].get_shape().getGlobalBounds().intersects(this->bots[j].get_balls()[b].get_shape().getGlobalBounds()))
                 {
-                    this->player_best.get_balls()[i].set_size(get_join_size(this->player_best.get_balls()[j].get_size(), this->player_best.get_balls()[i].get_size()));
-                    this->player_best.get_balls().erase(this->player_best.get_balls().begin() + j);
-                }
-                else
-                {
-                    this->player_best.get_balls()[j].set_size(get_join_size(this->player_best.get_balls()[j].get_size(), this->player_best.get_balls()[i].get_size()));
-                    this->player_best.get_balls().erase(this->player_best.get_balls().begin() + i);
+                    if(this->player_best.get_balls()[i].get_size() > this->bots[j].get_balls()[b].get_size())
+                    {
+                        this->player_best.get_balls()[i].set_size(get_join_size(this->player_best.get_balls()[i].get_size(), this->bots[j].get_balls()[b].get_size()));
+                        this->bots[j].get_balls().erase(this->bots[j].get_balls().begin() + b);
+                    }
+                    else
+                    {
+                        this->bots[j].get_balls()[b].set_size(get_join_size(this->player_best.get_balls()[i].get_size(), this->bots[j].get_balls()[b].get_size()));
+                        this->player_best.get_balls().erase(this->player_best.get_balls().begin() + i);
+                    }
                 }
             }
         }
