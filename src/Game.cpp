@@ -1,6 +1,8 @@
 #include "../include/Game.h"
 #include <cmath>
 
+#include <iostream>
+
 Game::Game()
 {
     this->board.createBoard();
@@ -59,12 +61,12 @@ void Game::push_to_net(Ball ball, int netX, int netY)
     this->net[netX][netY].push_back(ball);
 }
 
-sf::Vector2f Game::calculate_direction(sf::Vector2f position)
+sf::Vector2f Game::calculate_direction(sf::Vector2f position, sf::Vector2f destination)
 {
     sf::Vector2f window_center = this->board.get_window_size() / 2.f;
 
     sf::Vector2f direction = this->board.get_view_centre() - window_center;
-    direction += this->board.get_mouse_pos() - position;
+    direction += destination - position;
 
     normalize_vector(direction);
     return direction;
@@ -77,6 +79,7 @@ void Game::run()
     {
         this->checkDivision();
         this->move_player();
+        this->move_bots();
         // this->spawnBalls();
         this->waitForSpawn();
         this->checkJoin();
@@ -110,9 +113,22 @@ void Game::move_player()
     for (auto &ball : player_best.get_balls())
     {
         float dt = 0.016f;
-        sf::Vector2f velocity = dt * ball.get_speed() * this->calculate_direction(ball.get_position());
+        sf::Vector2f velocity = dt * ball.get_speed() * this->calculate_direction(ball.get_position(), this->board.get_mouse_pos());
         velocity = adjust_to_bounds(velocity, ball.get_shape().getGlobalBounds());
         ball.move(velocity);
+    }
+};
+
+void Game::move_bots()
+{
+    for (auto bot : this->bots)
+    {
+        for (auto ball : bot.get_balls())
+        {
+            sf::Vector2f position = ball.get_position();
+
+            sf::Vector2f direction = this->calculate_direction(position, );
+        }
     }
 };
 
@@ -249,7 +265,7 @@ void Game::splitBalls()
             continue;
         float size = get_division_size(player_balls[i].get_size());
         player_balls[i].set_size(size);
-        sf::Vector2f velocity = this->calculate_direction(player_balls[i].get_position());
+        sf::Vector2f velocity = this->calculate_direction(player_balls[i].get_position(), this->board.get_mouse_pos());
         velocity = adjust_to_bounds(velocity, player_balls[i].get_shape().getGlobalBounds());
         player_best.add_ball(player_balls[i].get_position() + velocity * player_best.get_shooting_range() * size, size);
     }

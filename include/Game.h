@@ -9,7 +9,7 @@ class Game
 {
 private:
     Board board;
-    Ball ball;
+    std::vector<Player> bots;
     Player player_best;
     sf::Vector2f adjust_to_bounds(sf::Vector2f speed, sf::FloatRect ball_bounds);
     void checkBounds();
@@ -28,11 +28,12 @@ private:
     float spawn_time = 10.f;
 
 public:
-    sf::Vector2f calculate_direction(sf::Vector2f position);
+    sf::Vector2f calculate_direction(sf::Vector2f position, sf::Vector2f destination);
     Game();
     ~Game() = default;
     void run();
     void move_player();
+    void move_bots();
     void waitForSpawn();
     void spawnBalls();
     void checkCollision();
@@ -46,6 +47,5 @@ public:
     void set_max_balls(int new_max);
     void set_count_balls(int new_count);
     void push_to_net(Ball ball, int netX, int netY);
-    sf::Vector2f calculate_velocity(sf::Vector2f position, float speed);
     Player &get_player_best();
 };
