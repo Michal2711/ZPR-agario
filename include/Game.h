@@ -28,9 +28,10 @@ private:
     float spawn_time = 10.f;
 
 public:
-    sf::Vector2f calculate_direction(sf::Vector2f position, sf::Vector2f destination);
     Game();
     ~Game() = default;
+    sf::Vector2f calculate_direction(sf::Vector2f position);
+    sf::Vector2f calculate_direction_bot(sf::Vector2f position, sf::Vector2f destination);
     void run();
     void move_player();
     void move_bots();
