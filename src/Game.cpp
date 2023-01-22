@@ -10,6 +10,8 @@ Game::Game()
     this->player_best.add_ball(sf::Vector2f(200.f, 200.f), 10.f);
     this->player_best.add_ball(sf::Vector2f(400.f, 200.f), 10.f);
     this->player_best.add_ball(sf::Vector2f(200.f, 400.f), 10.f);
+    this->bots.push_back(Player());
+    bots.front().add_ball(sf::Vector2f(600.f, 600.f), 10.f);
 };
 
 void normalize_vector(sf::Vector2f &direction)
@@ -61,12 +63,12 @@ void Game::push_to_net(Ball ball, int netX, int netY)
     this->net[netX][netY].push_back(ball);
 }
 
-sf::Vector2f Game::calculate_direction(sf::Vector2f position, sf::Vector2f destination)
+sf::Vector2f Game::calculate_direction(sf::Vector2f position)
 {
     sf::Vector2f window_center = this->board.get_window_size() / 2.f;
 
     sf::Vector2f direction = this->board.get_view_centre() - window_center;
-    direction += destination - position;
+    direction += this->board.get_mouse_pos() - position;
 
     normalize_vector(direction);
     return direction;
@@ -113,11 +115,22 @@ void Game::move_player()
     for (auto &ball : player_best.get_balls())
     {
         float dt = 0.016f;
-        sf::Vector2f velocity = dt * ball.get_speed() * this->calculate_direction(ball.get_position(), this->board.get_mouse_pos());
+        sf::Vector2f velocity = dt * ball.get_speed() * this->calculate_direction(ball.get_position());
         velocity = adjust_to_bounds(velocity, ball.get_shape().getGlobalBounds());
         ball.move(velocity);
     }
 };
+
+sf::Vector2f Game::calculate_direction_bot(sf::Vector2f position, sf::Vector2f destination)
+{
+    sf::Vector2f window_center = this->board.get_window_size() / 2.f;
+
+    sf::Vector2f direction = this->board.get_view_centre() - window_center;
+    direction += destination - position;
+
+    normalize_vector(direction);
+    return direction;
+}
 
 void Game::move_bots()
 {
@@ -127,7 +140,7 @@ void Game::move_bots()
         {
             sf::Vector2f position = ball.get_position();
 
-            sf::Vector2f direction = this->calculate_direction(position, );
+            sf::Vector2f direction = this->calculate_direction_bot(position, sf::Vector2f(0.f, 0.f));
         }
     }
 };
@@ -265,7 +278,7 @@ void Game::splitBalls()
             continue;
         float size = get_division_size(player_balls[i].get_size());
         player_balls[i].set_size(size);
-        sf::Vector2f velocity = this->calculate_direction(player_balls[i].get_position(), this->board.get_mouse_pos());
+        sf::Vector2f velocity = this->calculate_direction(player_balls[i].get_position());
         velocity = adjust_to_bounds(velocity, player_balls[i].get_shape().getGlobalBounds());
         player_best.add_ball(player_balls[i].get_position() + velocity * player_best.get_shooting_range() * size, size);
     }
