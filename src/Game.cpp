@@ -7,31 +7,37 @@
 Game::Game()
 {
     this->board.createBoard();
-    this->player_best.init_shape(this->board.get_window_centre());
-    player_best.print_balls(); // this prints
+    this->player_best.add_ball(this->board.get_window_centre());
+    this->player_best.add_ball(sf::Vector2f(300.f, 300.f));
+    this->player_best.add_ball(sf::Vector2f(350.f, 350.f));
+    this->player_best.add_ball(sf::Vector2f(350.f, 400.f));
+    this->player_best.add_ball(sf::Vector2f(350.f, 450.f));
 };
 
-sf::Vector2f Game::get_player_speed()
+void normalize_vector(sf::Vector2f &direction)
 {
-    float dt = this->clock.restart().asSeconds();
-
-    sf::Vector2f direction = this->board.get_view_centre() - sf::Vector2f(250.f, 250.f); // chyba zadziala ale nie wiem czy nie trza dodac
-    direction += this->board.get_mouse_pos();
-    direction -= this->player.get_position();
-
-    // sf::Vector2f direction = this->board.get_mouse_pos() - this->board.get_window_centre();
-    // std::cout << this->board.get_mouse_pos().x << ":" << this->board.get_mouse_pos().y << std::endl;
-    // std::cout << this->board.get_window_centre().x << ":" << this->board.get_window_centre().y << std::endl;
-    // std::cout << this->player.get_position().x << ":" << this->player.get_position().y << std::endl;
-
     float distance = sqrt(direction.x * direction.x + direction.y * direction.y);
     if (distance)
-        direction = direction / (distance);
+        direction = direction / distance;
     else
         direction = sf::Vector2f(0, 0);
+};
 
-    direction = direction * player.get_speed();
-    return this->adjust_to_bounds(direction * dt);
+sf::Vector2f Game::calculate_velocity(sf::Vector2f position, float speed)
+{
+    // float dt = this->clock.restart().asSeconds();
+    float dt = 0.016f;
+
+    sf::Vector2f window_size = this->board.get_window_size();
+    window_size.x /= 2;
+    window_size.y /= 2;
+
+    sf::Vector2f direction = this->board.get_view_centre() - window_size;
+    direction += this->board.get_mouse_pos() - position;
+
+    normalize_vector(direction);
+
+    return direction * speed * dt;
 };
 
 void Game::run()
@@ -40,32 +46,27 @@ void Game::run()
     while (this->board.is_running())
     {
         this->move_player();
-        // this->player.set_position(sf::Vector2f(0.f, 0.f));
-        this->board.render(this->player, this->player2); // this should take vector of players
+        this->board.render(this->player_best.get_balls()); // this should take vector of players
     }
 };
 
 void Game::move_player()
 {
-    sf::Vector2f speed = this->get_player_speed();
-
-    this->player.move(speed);
-    // std::cout << speed.x << ":" << speed.y << std::endl;
-    this->board.update_player_origin(speed);
-    // std::cout << this->player.get_position().x << ":" << this->player.get_position().y << std::endl;
-    this->board.set_player_pos(this->player.get_position());
+    for (auto &ball : player_best.get_balls())
+    {
+        sf::Vector2f velocity = this->calculate_velocity(ball.get_position(), ball.get_speed());
+        velocity = adjust_to_bounds(velocity, ball.get_shape().getGlobalBounds());
+        ball.move(velocity);
+    }
 };
 
-sf::Vector2f Game::adjust_to_bounds(sf::Vector2f speed)
+sf::Vector2f Game::adjust_to_bounds(sf::Vector2f velocity, sf::FloatRect ball_bounds)
 {
-    sf::FloatRect player = this->player.get_shape().getGlobalBounds();
-    sf::FloatRect board = this->board.get_bounds();
+    sf::FloatRect board_bounds = this->board.get_bounds();
 
-    if ((player.top + speed.y < board.top) || ((player.top + player.height) + speed.y > (board.top + board.height)))
-        speed.y = 0.f;
-    if ((player.left + speed.x < board.left) || ((player.left + player.width) + speed.x > (board.left + board.width)))
-        speed.x = 0.f;
-
-    // std::cout << "predkosc:" << speed.x << " " << speed.y << std::endl;
-    return speed;
+    if ((ball_bounds.top + velocity.y < board_bounds.top) || ((ball_bounds.top + ball_bounds.height) + velocity.y > (board_bounds.top + board_bounds.height)))
+        velocity.y = 0.f;
+    if ((ball_bounds.left + velocity.x < board_bounds.left) || ((ball_bounds.left + ball_bounds.width) + velocity.x > (board_bounds.left + board_bounds.width)))
+        velocity.x = 0.f;
+    return velocity;
 };

@@ -1,16 +1,21 @@
 #include "../include/Player.h"
 #include <iostream>
 
-void Player::init_shape(sf::Vector2f position)
+void Player::add_ball(sf::Vector2f position)
 {
-    auto ball = std::make_shared<Ball>(position);
+    Ball ball = Ball(position);
     this->balls.push_back(ball);
 };
 
 void Player::print_balls()
 {
-    for (auto &ball : this->balls)
+    for (auto ball : this->balls)
     {
-        std::cout << ball->get_position().x << std::endl;
+        std::cout << ball.get_position().x << ":" << ball.get_position().y << std::endl;
     }
+};
+
+std::vector<Ball> &Player::get_balls()
+{
+    return this->balls;
 };

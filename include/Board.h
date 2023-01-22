@@ -4,8 +4,8 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include "Ball.h"
-// #include "Player.h"
-#include "Ball.h"
+#include "Player.h"
+// #include "Ball.h"
 
 class Board
 {
@@ -13,7 +13,6 @@ private:
     const float bound = 1000.f;
     const int window_size_x = 500;
     const int window_size_y = 500;
-    // sf::Vector2f view_center;
 
     sf::Vector2f bounds_pos = sf::Vector2f((window_size_x / 2) - (bound / 2), (window_size_y / 2) - (bound / 2));
     sf::Vector2f bounds_size = sf::Vector2f(bound, bound);
@@ -42,16 +41,16 @@ public:
     void createBoard();
     void checkClosed();
     const bool is_running() const;
-    void render(Ball palyer, Ball player2);
-    void draw_player(Ball player);
+    void render(std::vector<Ball> balls);
+    void draw_player(std::vector<Ball> balls);
     void draw_grid();
     void draw_grid_lines();
     void create_grid_lines();
-    void set_player_pos(sf::Vector2f new_pos);
+    void update_view(std::vector<Ball> balls);
     sf::FloatRect get_bounds();
     sf::VertexArray getGrid() const;
     sf::Vector2f get_mouse_pos();
+    sf::Vector2f get_window_size();
     sf::Vector2f get_window_centre();
     sf::Vector2f get_view_centre();
-    void update_player_origin(sf::Vector2f player_move);
 };

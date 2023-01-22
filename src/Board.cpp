@@ -4,7 +4,6 @@
 void Board::createBoard()
 {
     this->video_mode = sf::VideoMode(this->window_size_x, this->window_size_y);
-    // this->video_mode = sf::VideoMode(20, 20);
     this->window = new sf::RenderWindow(this->video_mode, "Agario", sf::Style::Close | sf::Style::Titlebar);
     this->window->setFramerateLimit(60);
 
@@ -40,33 +39,35 @@ const bool Board::is_running() const
     return this->window->isOpen();
 };
 
-void Board::render(Ball player, Ball player2)
+void Board::render(std::vector<Ball> balls)
 {
     this->checkClosed();
     this->window->clear(sf::Color::White);
-
-    // this->update_player_origin(player.get_position());
-
     this->draw_grid();
     this->draw_grid_lines();
-    this->draw_player(player);
-    this->draw_player(player2);
-
-    sf::Vector2f view_center = player2.get_position() - player.get_position();
-    view_center.x /= 2;
-    view_center.y /= 2;
-    view_center += player.get_position();
-    // std::cout << "Center:" << view_center.x << ":" << view_center.y << std::endl;
-
-    this->view.setCenter(view_center);
-    // this->view.setCenter(sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2));
+    this->draw_player(balls);
+    this->update_view(balls);
     this->window->setView(this->view);
     this->window->display();
 };
 
-void Board::draw_player(Ball player)
+void Board::update_view(std::vector<Ball> balls)
 {
-    this->window->draw(player.get_shape());
+    sf::Vector2f new_view = sf::Vector2f(0.f, 0.f);
+    for (auto &ball : balls)
+    {
+        new_view += ball.get_position();
+    }
+    new_view /= float(balls.size());
+    this->view.setCenter(new_view);
+};
+
+void Board::draw_player(std::vector<Ball> balls)
+{
+    for (auto &ball : balls)
+    {
+        this->window->draw(ball.get_shape());
+    }
 };
 
 void Board::draw_grid()
@@ -93,12 +94,6 @@ void Board::create_grid_lines()
     }
 }
 
-// delete this
-void Board::set_player_pos(sf::Vector2f new_pos)
-{
-    this->player_pos = new_pos;
-}
-
 sf::FloatRect Board::get_bounds()
 {
     return this->bounds;
@@ -109,6 +104,12 @@ sf::Vector2f Board::get_mouse_pos()
     sf::Vector2f position = sf::Vector2f(sf::Mouse::getPosition(*this->window));
     return position;
 };
+
+sf::Vector2f Board::get_window_size()
+{
+    return sf::Vector2f(window_size_x, window_size_y);
+};
+
 sf::Vector2f Board::get_window_centre()
 {
     return sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2);
@@ -118,10 +119,3 @@ sf::Vector2f Board::get_view_centre()
 {
     return this->view.getCenter();
 }
-
-void Board::update_player_origin(sf::Vector2f player_move){
-    // this->player_origin -= getplayer_move;
-    // this->player_origin.y = player_move.y;
-    // std::cout
-    // << "Window: " << this->player_origin.x << ":" << this->player_origin.y << std::endl;
-};

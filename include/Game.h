@@ -14,6 +14,8 @@ private:
     // std::vector<Player> player_vec;
     Ball player2 = Ball(sf::Vector2f(240.f, 300.f));
     sf::Vector2f get_player_speed();
+    sf::Vector2f calculate_velocity(sf::Vector2f position, float speed);
+    sf::Vector2f adjust_to_bounds(sf::Vector2f speed, sf::FloatRect ball_bounds);
     sf::Clock clock;
 
 public:
@@ -21,5 +23,4 @@ public:
     ~Game() = default;
     void run();
     void move_player();
-    sf::Vector2f adjust_to_bounds(sf::Vector2f speed);
 };
