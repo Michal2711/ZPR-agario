@@ -51,7 +51,6 @@ public:
     void draw_grid_lines();
     void create_grid_lines();
     void update_view(std::vector<Ball> balls);
-    // void set_count_balls(int new_count);
     sf::FloatRect get_bounds();
     sf::VertexArray getGrid() const;
     sf::Vector2f get_mouse_pos();

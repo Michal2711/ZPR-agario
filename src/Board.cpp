@@ -1,5 +1,4 @@
 #include "../include/Board.h"
-#include <iostream>
 
 void Board::createBoard()
 {
@@ -10,9 +9,6 @@ void Board::createBoard()
     this->view = sf::View(sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2), sf::Vector2f(this->window_size_x, this->window_size_y));
     this->window->setView(this->view);
     this->player_pos = sf::Vector2f(this->window_size_x / 2, this->window_size_y / 2);
-
-    // this->net(this->net_width, std::vector<std::vector<Ball*>>(this->net_height));
-    // std::vector<std::vector<std::vector<Ball*>>> net(net_width, std::vector<std::vector<Ball*>>(net_height));
 
     this->grid = sf::RectangleShape(sf::Vector2f(this->bounds_size.x, this->bounds_size.y));
     grid.setPosition((this->window_size_x - grid.getSize().x) / 2, (this->window_size_y - grid.getSize().y) / 2);
@@ -48,7 +44,6 @@ void Board::render(std::vector<Ball> balls, std::unordered_map<int, std::unorder
     this->window->clear(sf::Color::White);
     this->draw_grid();
     this->draw_grid_lines();
-    // std::cout<<balls.size()<<std::endl;
     this->draw_player(balls);
     this->update_view(balls);
     for (auto &[firstKey, innerMap] : net)
@@ -58,7 +53,6 @@ void Board::render(std::vector<Ball> balls, std::unordered_map<int, std::unorder
             for (auto ball : balls)
             {
                 this->draw_ball(ball);
-                // std::cout<<"position: "<<"\t"<<typeid(*ball).name()<<std::endl;
             }
         }
     }

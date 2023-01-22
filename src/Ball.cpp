@@ -56,11 +56,6 @@ float Ball::get_size()
     return this->shape.getRadius();
 };
 
-// b2Body* Ball::getBody() const
-// {
-//     return this->body;
-// }
-
 void Ball::set_position(sf::Vector2f position)
 {
     this->shape.setPosition(position);
