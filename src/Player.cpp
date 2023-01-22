@@ -1,10 +1,10 @@
 #include "../include/Player.h"
 #include <iostream>
 
-void Player::add_ball(sf::Vector2f position)
+void Player::add_ball(sf::Vector2f position, float size)
 {
-    std::cout<<"TWORZENIE"<<std::endl;
-    Ball ball = Ball(position);
+    std::cout << "TWORZENIE" << std::endl;
+    Ball ball = Ball(position, size);
     this->balls.push_back(ball);
 };
 

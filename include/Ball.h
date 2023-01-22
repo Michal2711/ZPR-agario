@@ -17,7 +17,7 @@ protected:
 
 public:
     Ball() = default;
-    Ball(sf::Vector2f position, sf::Color color = sf::Color::Blue);
+    Ball(sf::Vector2f position, float size = 10.f, sf::Color color = sf::Color::Blue);
     virtual ~Ball() = default;
     void init_shape(sf::Vector2f position, float size, sf::Color color = sf::Color::Red);
 
