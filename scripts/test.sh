@@ -1,7 +1,3 @@
 #!/bin/bash
-mkdir ../build
-cd ../build
-cmake ..
-make
-cd tests
-./Agariotests
+cd ../tests
+./test

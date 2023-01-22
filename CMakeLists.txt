@@ -35,11 +35,11 @@ configure_file(include/config.h.in config.h)
 
 # Find SFML shared libraries
 find_package(SFML 2.5 COMPONENTS system window graphics audio REQUIRED)
-find_package(Boost COMPONENTS filesystem system unit_test_framework REQUIRED)
+# find_package(Boost COMPONENTS filesystem system unit_test_framework REQUIRED)
 # find_package((Box2D REQUIRED))
 
-add_subdirectory(tests)
-include_directories(${Boost_INCLUDE_DIRS})
+
+# include_directories(${Boost_INCLUDE_DIRS})
 
 # Compile executable
 add_executable(Agario src/main.cpp src/Board.cpp src/Ball.cpp src/Game.cpp src/Player.cpp)
@@ -60,7 +60,7 @@ set_target_properties(Agario
 
 # Link executable to required SFML modules
 target_link_libraries(Agario sfml-graphics sfml-audio)
-target_link_libraries(Agario ${Boost_LIBRARIES})
+# target_link_libraries(Agario ${Boost_LIBRARIES})
 # target_link_libraries(Agario Box2D::Box2D)
 
 # Set executable install location

@@ -11,7 +11,6 @@ private:
     Board board;
     Ball ball;
     Player player_best;
-    sf::Vector2f calculate_direction(sf::Vector2f position);
     sf::Vector2f adjust_to_bounds(sf::Vector2f speed, sf::FloatRect ball_bounds);
     void checkBounds();
     sf::Clock clock;
@@ -29,6 +28,7 @@ private:
     float spawn_time = 10.f;
 
 public:
+    sf::Vector2f calculate_direction(sf::Vector2f position);
     Game();
     ~Game() = default;
     void run();

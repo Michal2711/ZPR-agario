@@ -19,44 +19,9 @@ void normalize_vector(sf::Vector2f &direction)
         direction = sf::Vector2f(0, 0);
 };
 
-Player &Game::get_player_best()
-{
-    return this->player_best;
-}
-
-Board Game::get_board()
-{
-    return this->board;
-}
-
-int Game::get_max_balls() const
-{
-    return this->max_balls;
-}
-
 int Game::get_count_balls() const
 {
     return this->count_balls;
-}
-
-int Game::get_net_size() const
-{
-    return this->net_size;
-}
-
-void Game::set_max_balls(int new_max)
-{
-    this->max_balls = new_max;
-}
-
-void Game::set_count_balls(int new_count)
-{
-    this->count_balls = new_count;
-}
-
-void Game::push_to_net(Ball ball, int netX, int netY)
-{
-    this->net[netX][netY].push_back(ball);
 }
 
 Player &Game::get_player_best()
@@ -72,11 +37,6 @@ Board Game::get_board()
 int Game::get_max_balls() const
 {
     return this->max_balls;
-}
-
-int Game::get_count_balls() const
-{
-    return this->count_balls;
 }
 
 int Game::get_net_size() const
