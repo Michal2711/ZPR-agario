@@ -82,7 +82,6 @@ void Game::run()
         this->checkDivision();
         this->move_player();
         this->move_bots();
-        // this->spawnBalls();
         this->waitForSpawn();
         this->checkJoin();
         this->checkCollision();

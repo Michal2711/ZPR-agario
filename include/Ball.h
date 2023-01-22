@@ -4,12 +4,14 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
+const float BASIC_SIZE = 10.f;
+const float BASIC_SPEED = 200.f;
+
 class Ball
 {
 protected:
-    // zmienic by byly zmienne globalne
-    float size = 10.f;
-    float speed = 200.f;
+    float size = BASIC_SIZE;
+    float speed = BASIC_SPEED;
     sf::CircleShape shape;
     sf::Color color;
 

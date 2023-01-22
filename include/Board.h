@@ -9,12 +9,18 @@
 #include <vector>
 // #include "Ball.h"
 
+const float BOUND = 2000.f;
+const int WINDOW_X = 500;
+const int WINDOW_Y = 500;
+const int CELL_SIZE = 10;
+
+
 class Board
 {
 private:
-    const float bound = 2000.f;
-    const int window_size_x = 500;
-    const int window_size_y = 500;
+    const float bound = BOUND;
+    const int window_size_x = WINDOW_X;
+    const int window_size_y = WINDOW_Y;
 
     sf::Vector2f bounds_pos = sf::Vector2f((window_size_x / 2) - (bound / 2), (window_size_y / 2) - (bound / 2));
     sf::Vector2f bounds_size = sf::Vector2f(bound, bound);
@@ -25,18 +31,11 @@ private:
 
     sf::View view;
 
-    // delete this
-    sf::Vector2f player_pos;
-    sf::Vector2f player_origin = sf::Vector2f(0.f, 0.f);
-
     sf::Event sfmlEvent;
 
     sf::RectangleShape grid;
     sf::VertexArray grid_lines;
-    const int cell_size = 10;
-
-    const int zoom = 2;
-
+    const int cell_size = CELL_SIZE;
 public:
     Board() = default;
     ~Board() = default;
@@ -45,7 +44,7 @@ public:
     const bool is_running() const;
     void render(std::vector<Ball> balls, std::unordered_map<int, std::unordered_map<int, std::vector<Ball>>> net);
     void draw_player(std::vector<Ball> balls);
-    void draw_static_balls();
+    // void draw_static_balls();
     void draw_ball(Ball ball);
     void draw_grid();
     void draw_grid_lines();
