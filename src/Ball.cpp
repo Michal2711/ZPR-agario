@@ -28,6 +28,7 @@ void Ball::set_size(float new_size)
 {
     this->size = new_size;
     this->shape.setRadius(new_size);
+    this->shape.setOrigin(this->size, this->size);
 }
 
 sf::CircleShape Ball::get_shape() const
@@ -55,10 +56,10 @@ float Ball::get_size()
     return this->size;
 };
 
-b2Body* Ball::getBody() const
-{
-    return this->body;
-}
+// b2Body* Ball::getBody() const
+// {
+//     return this->body;
+// }
 
 void Ball::set_position(sf::Vector2f position)
 {
