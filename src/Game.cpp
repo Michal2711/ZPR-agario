@@ -9,10 +9,10 @@ Game::Game()
 {
     this->board.createBoard();
     this->player_best.add_ball(this->board.get_window_centre(), 10.f);
-    this->player_best.add_ball(sf::Vector2f(200.f, 200.f), 10.f);
-    this->player_best.add_ball(sf::Vector2f(400.f, 200.f), 10.f);
-    this->player_best.add_ball(sf::Vector2f(200.f, 400.f), 10.f);
-    this->player_best.add_ball(sf::Vector2f(400.f, 400.f), 10.f);
+    // this->player_best.add_ball(sf::Vector2f(200.f, 200.f), 10.f);
+    // this->player_best.add_ball(sf::Vector2f(400.f, 200.f), 10.f);
+    // this->player_best.add_ball(sf::Vector2f(200.f, 400.f), 10.f);
+    // this->player_best.add_ball(sf::Vector2f(400.f, 400.f), 10.f);
 };
 
 void normalize_vector(sf::Vector2f &direction)
@@ -27,6 +27,41 @@ void normalize_vector(sf::Vector2f &direction)
 Player& Game::get_player_best()
 {
     return this->player_best;
+}
+
+Board Game::get_board()
+{
+    return this->board;
+}
+
+int Game::get_max_balls() const
+{
+    return this->max_balls;
+}
+
+int Game::get_count_balls() const
+{
+    return this->count_balls;
+}
+
+int Game::get_net_size() const
+{
+    return this->net_size;
+}
+
+void Game::set_max_balls(int new_max)
+{
+    this->max_balls = new_max;
+}
+
+void Game::set_count_balls(int new_count)
+{
+    this->count_balls = new_count;
+}
+
+void Game::push_to_net(Ball ball, int netX, int netY)
+{
+    this->net[netX][netY].push_back(ball);
 }
 
 sf::Vector2f Game::calculate_velocity(sf::Vector2f position, float speed)
@@ -57,7 +92,8 @@ void Game::run()
         // }
         this->checkDivision();
         this->move_player();
-        this->spawnBalls();
+        // this->spawnBalls();
+        this->waitForSpawn();
         this->checkJoin();
         this->checkCollision();
         this->board.render(this->player_best.get_balls(), this->net); // this should take vector of players
@@ -90,31 +126,36 @@ sf::Vector2f Game::adjust_to_bounds(sf::Vector2f velocity, sf::FloatRect ball_bo
     return velocity;
 };
 
-void Game::spawnBalls()
+void Game::waitForSpawn()
 {
-    sf::FloatRect board_bounds = this->board.get_bounds();
     if (this->spawn_time < this->max_spawn_time)
         this->spawn_time += 1.f;
     else
     {
-        if (this->count_balls < this->max_balls)
+        this->spawnBalls();
+    }
+}
+
+void Game::spawnBalls()
+{
+    sf::FloatRect board_bounds = this->board.get_bounds();
+    if (this->count_balls < this->max_balls)
+    {
+        sf::Color color;
+        sf::Vector2f position;
+        for (int i = 0; i < this->max_balls; ++i)
         {
-            sf::Color color;
-            sf::Vector2f position;
-            for (int i = 0; i < this->max_balls; ++i)
-            {
-                color = sf::Color(rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
-                position = sf::Vector2f(
-                    static_cast<float>(rand() % int(board_bounds.width) + board_bounds.left),
-                    static_cast<float>(rand() % int(board_bounds.height) + board_bounds.top));
-            }
-            int netX = position.x / this->net_size;
-            int netY = position.y / this->net_size;
-            Ball ball(position, 10.f, color);                             // change to have variable
-            this->net[netX][netY].push_back(Ball(position, 10.f, color)); // change to have variable
-            this->count_balls += 1;
-            this->spawn_time = 0.f;
+            color = sf::Color(rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
+            position = sf::Vector2f(
+                static_cast<float>(rand() % int(board_bounds.width) + board_bounds.left),
+                static_cast<float>(rand() % int(board_bounds.height) + board_bounds.top));
         }
+        int netX = position.x / this->net_size;
+        int netY = position.y / this->net_size;
+        Ball ball(position, 10.f, color);                             // change to have variable
+        this->net[netX][netY].push_back(Ball(position, 10.f, color)); // change to have variable
+        this->count_balls += 1;
+        this->spawn_time = 0.f;
     }
 }
 
@@ -174,7 +215,6 @@ void Game::checkJoin()
         {
             if ((this->player_best.get_balls()[i].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[j].get_position())) || (this->player_best.get_balls()[j].get_shape().getGlobalBounds().contains(this->player_best.get_balls()[i].get_position())))
             {
-                // if(sqrt(pow(this->player_best.get_balls()[i].get_position().x - this->player_best.get_balls()[j].get_position().x, 2) + pow(this->player_best.get_balls()[i].get_position().y - this->player_best.get_balls()[j].get_position().y, 2)) < 5.0f){
                 if (this->player_best.get_balls()[i].get_size() >= this->player_best.get_balls()[j].get_size())
                 {
                     this->player_best.get_balls()[i].set_size(get_join_size(this->player_best.get_balls()[j].get_size(), this->player_best.get_balls()[i].get_size()));
