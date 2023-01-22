@@ -53,12 +53,29 @@ void Game::run()
         this->spawnBalls();
         this->checkJoin();
         this->checkCollision();
+        this->checkBounds();
         this->board.render(this->player_best.get_balls(), this->net); // this should take vector of players
     }
 };
 
-void checkSpace()
+void Game::checkBounds()
 {
+
+    sf::FloatRect board_bounds = this->board.get_bounds();
+    for (auto &ball : this->player_best.get_balls())
+    {
+        sf::Vector2f position = ball.get_position();
+        sf::FloatRect ball_bounds = ball.get_shape().getGlobalBounds();
+        std::cout << ball_bounds.top << "<" << board_bounds.top << std::endl;
+        if (ball_bounds.top < board_bounds.top)
+            ball.set_position(sf::Vector2f(ball.get_position().x, board_bounds.top + 2 * ball.get_size()));
+        else if ((ball_bounds.top + ball_bounds.height) > (board_bounds.top + board_bounds.height))
+            ball.set_position(sf::Vector2f(ball.get_position().x, board_bounds.top + board_bounds.height - 2 * ball.get_size()));
+        else if (ball_bounds.left < board_bounds.left)
+            ball.set_position(sf::Vector2f(board_bounds.left + 2 * ball.get_size(), ball.get_position().y));
+        else if ((ball_bounds.left + ball_bounds.width) > (board_bounds.left + board_bounds.width))
+            ball.set_position(sf::Vector2f(board_bounds.left + board_bounds.width - 2 * ball.get_size(), ball.get_position().y));
+    }
 }
 
 void Game::move_player()
@@ -117,14 +134,14 @@ float get_join_size(double size1, double size2)
 
     double area1 = size1 * size1;
     double area2 = size2 * size2;
-    std::cout << sqrt(area1 + area2) << std::endl;
+    // std::cout << sqrt(area1 + area2) << std::endl;
     return float(sqrt(area1 + area2));
 };
 
 float get_division_size(double size)
 {
-    std::cout << "before:" << size << std::endl;
-    std::cout << "after:" << sqrt((size * size) / 2) << std::endl;
+    // std::cout << "before:" << size << std::endl;
+    // std::cout << "after:" << sqrt((size * size) / 2) << std::endl;
     return float(sqrt((size * size) / 2.f));
 }
 
@@ -201,14 +218,16 @@ void Game::checkDivision()
 
 void Game::splitBalls()
 {
-    std::cout << "BARCELONA" << std::endl;
+    // std::cout << "BARCELONA" << std::endl;
     std::vector<Ball> &player_balls = this->player_best.get_balls();
     int size_before = player_balls.size();
 
     std::cout << size_before << std::endl;
     for (int i = 0; i < size_before; i++)
     {
-        float size = get_division_size(double(player_balls[i].get_size()));
+        if (player_balls[i].get_size() < 10.f)
+            continue;
+        float size = get_division_size(player_balls[i].get_size());
         player_balls[i].set_size(size);
         // std::cout << player_balls[i].get_size() << std::endl;
         // std::cout << size << std::endl;
