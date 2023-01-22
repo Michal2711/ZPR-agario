@@ -4,4 +4,4 @@ cd ../build
 cmake ..
 make
 cd tests
-ctest
+./Agariotests
